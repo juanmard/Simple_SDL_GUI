@@ -1,0 +1,18 @@
+Welcome, this is SSG (not the gun) which stands for Simple SDL GUI.
+
+If you want to compile this code you'll need SDL2 and SDL2_image.
+
+To compile it you have to execute `make` and then `./main` in the shell
+while in the "Simple_SDL_GUI" folder
+
+What is coded to date?
+
+------------SSG_BUTTONS------------
+Buttons have an effect when being pressed for feedback purposes
+They include a SSG_TEXT box which is kind of a tag
+
+------------SSG_TEXT------------
+Texts only have one font and one possible size for the moment
+
+
+August 2023 - Francisco Lara Rico
