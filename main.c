@@ -3,11 +3,12 @@
 #include <SDL2/SDL_image.h>
 #include <err.h>
 #include <stddef.h>
-#include <pthread.h>
 
 #include "graphic_utils.h"
 #include "ssg_button.h"
 #include "ssg_text.h"
+#include "ssg_menu.h"
+#include "welcome.h"
 
 const int INIT_WIDTH = 640;
 const int INIT_HEIGHT = 400;
@@ -19,24 +20,17 @@ void draw(SDL_Renderer* renderer)
 
 
 
-void event_loop(SDL_Renderer* renderer, struct ssg_button* button_1,
-                struct ssg_button* button_2,
-                struct ssg_button* button_3, struct ssg_text* text1,
-    struct ssg_text* text2)
+void event_loop(SDL_Renderer* renderer,
+                struct ssg_button_list* button_list1,
+                struct ssg_text* text1,
+                struct ssg_text* text2)
 {
-    /*
-    print_ssg_button(renderer, button_1);
-    print_ssg_button(renderer, button_2);
-    print_ssg_button(renderer, button_3);
-    draw(renderer);
-    */
     SDL_Event event;
     event.type = SDL_WINDOWEVENT;
     int mbl_pushed = 0;
     while(1)
     {
         SDL_WaitEventTimeout(&event,20);
-        //SDL_WaitEvent(&event);
         switch(event.type)
         {
         case SDL_QUIT:
@@ -44,9 +38,7 @@ void event_loop(SDL_Renderer* renderer, struct ssg_button* button_1,
         case SDL_WINDOWEVENT:
             if(event.window.event == SDL_WINDOWEVENT_RESIZED)
             {
-                print_ssg_button(renderer, button_1);
-                print_ssg_button(renderer, button_2);
-                print_ssg_button(renderer, button_3);
+                print_button_list(renderer, button_list1);
                 print_ssg_text(renderer, text1);
                 print_ssg_text(renderer, text2);
                 draw(renderer);
@@ -58,45 +50,8 @@ void event_loop(SDL_Renderer* renderer, struct ssg_button* button_1,
                 if(mbl_pushed)
                     break;
                 mbl_pushed = 1;
-                if (is_ssg_button_pressed(button_1, event.button.x,
-                                          event.button.y))
-                {
-                    printf("Monday left me broken\n");
-                    pthread_t thr;
-                    int e;
-                    e = pthread_create(&thr, NULL,
-                                       button_press_feedback,
-                                       (void*) button_1);
-                    if (e != 0)
-                        errx(EXIT_FAILURE, "pthread_create()");
-                    pthread_detach(thr);
-                }
-                if (is_ssg_button_pressed(button_2, event.button.x,
-                                          event.button.y))
-                {
-                    printf("Tuesday I was through with hoping\n");
-                    pthread_t thr;
-                    int e;
-                    e = pthread_create(&thr, NULL,
-                                       button_press_feedback,
-                                       (void*) button_2);
-                    if (e != 0)
-                        errx(EXIT_FAILURE, "pthread_create()");
-                    pthread_detach(thr);
-                }
-                if (is_ssg_button_pressed(button_3, event.button.x,
-                                          event.button.y))
-                {
-                    printf("Wednesday my ...... are broken\n");
-                    pthread_t thr;
-                    int e;
-                    e = pthread_create(&thr, NULL,
-                                       button_press_feedback,
-                                       (void*) button_3);
-                    if (e != 0)
-                        errx(EXIT_FAILURE, "pthread_create()");
-                    pthread_detach(thr);
-                }
+                check_pressed_buttons(button_list1, event.button.x,
+                                      event.button.y);
             }
             break;
         case SDL_MOUSEBUTTONUP:
@@ -105,9 +60,7 @@ void event_loop(SDL_Renderer* renderer, struct ssg_button* button_1,
         default:
             break;
         }
-        print_ssg_button(renderer, button_1);
-        print_ssg_button(renderer, button_2);
-        print_ssg_button(renderer, button_3);
+        print_button_list(renderer, button_list1);
         print_ssg_text(renderer, text1);
         print_ssg_text(renderer, text2);
         draw(renderer);
@@ -136,16 +89,30 @@ int main(int argc, char** argv)
 
 
     // BUTTON 1
-    struct ssg_button* button_1 = new_button_std(350, 50, "button_nu\
-mber_1", 0xFF, 0x00, 0x55, "PINK BUTTON");
+    struct ssg_button* button_1 = new_button_std(350, 50, "pink_button\
+", 0xFF, 0x00, 0x55, "PINK BUTTON");
 
     // BUTTON 2
-    struct ssg_button* button_2 = new_button_std(200, 50, "button_nu\
-mber_2", 0x22, 0x44, 0xBB, "ANOTHER BUTTON");
+    struct ssg_button* button_2 = new_button_std(200, 50, "cian_\
+button", 0x22, 0x44, 0xBB, "ANOTHER BUTTON");
 
     // BUTTON 3
-    struct ssg_button* button_3 = new_button_std(275, 120, "button_nu\
-mber_3", 0xDD, 0x99, 0x09, "ORANGE BUTTON");
+    struct ssg_button* button_3 = new_button_std(275, 120, "orange_\
+button", 0xDD, 0x77, 0x00, "ORANGE BUTTON");
+
+    // BUTTON 3
+    struct ssg_button* button_4 = new_button_std(300, 250, "red_\
+button", 0xEE, 0x10, 0x10, "RED BUTTON");
+
+
+    /*
+      BUTTON LIST
+     */
+    struct ssg_button_list* button_list1 = new_button_list();
+    add_button_to_list(button_list1, button_1);
+    add_button_to_list(button_list1, button_2);
+    add_button_to_list(button_list1, button_3);
+    add_button_to_list(button_list1, button_4);
 
     // TEXT 1
     struct ssg_text* text1 = new_ssg_text(50, 250, 160, 160,
@@ -159,13 +126,11 @@ como los hermanos Wachosky");
  poemas de mi puno y letra te envio canciones de cuatro cuarenta");
 
 
-    event_loop(renderer, button_1, button_2, button_3, text1, text2);
+    event_loop(renderer, button_list1, text1, text2);
 
     free_text(text1);
     free_text(text2);
-    free_button(button_1);
-    free_button(button_2);
-    free_button(button_3);
+    free_button_list(button_list1);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();

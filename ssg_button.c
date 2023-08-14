@@ -13,7 +13,8 @@ int is_ssg_button_pressed(struct ssg_button* button, int x, int y)
         && y>=button->y && y<=button->y+button->h;
 }
 
-void print_ssg_button(SDL_Renderer* renderer, struct ssg_button* button)
+void print_ssg_button(SDL_Renderer* renderer,
+                      struct ssg_button* button)
 {
     SDL_Color rgb;
     SDL_GetRenderDrawColor(renderer, &rgb.r, &rgb.g, &rgb.b, &rgb.a);
