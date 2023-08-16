@@ -14,8 +14,14 @@ int is_ssg_button_pressed(struct ssg_button* button, int x, int y)
 }
 
 void print_ssg_button(SDL_Renderer* renderer,
-                      struct ssg_button* button)
+                      struct ssg_button* button,
+                      SDL_Surface* font)
 {
+    /*
+    for (size_t i = 0; i<30; i++)
+        printf("$$$$$    PRINTING BUTTON %s\n", button->tag->text);
+    */
+
     SDL_Color rgb;
     SDL_GetRenderDrawColor(renderer, &rgb.r, &rgb.g, &rgb.b, &rgb.a);
     SDL_SetRenderDrawColor(renderer, button->red2, button->green2,
@@ -33,13 +39,16 @@ void print_ssg_button(SDL_Renderer* renderer,
     SDL_SetRenderDrawColor(renderer, button->visible_red,
                            button->visible_green,
                            button->visible_blue, 0xFF);
+
     for (int i = 0; i < button->h-1; i++)
+    {
         SDL_RenderDrawLine(renderer, button->x+1, button->y+1+i,
                            button->x+button->w-1, button->y+1+i);
+    }
     SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
 
     // writing the tag of the button
-    print_ssg_text(renderer, button->tag);
+    print_ssg_text(renderer, button->tag, font);
 }
 
 void * button_press_feedback(void* button_v)

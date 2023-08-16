@@ -40,3 +40,15 @@ void getRGB(SDL_Surface *surface, int x, int y, SDL_Color *c)
     Uint32 data = getpixel(surface,x,y);
     SDL_GetRGB(data,surface->format,&(c->r),&(c->g),&(c->b));
 }
+
+void print_background(SDL_Renderer* renderer)
+{
+    SDL_Color rgb;
+    SDL_GetRenderDrawColor(renderer, &rgb.r, &rgb.g, &rgb.b, &rgb.a);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    for (int i = 0; i<420; i++)
+    {
+        SDL_RenderDrawLine(renderer, 0, i, 640, i);
+    }
+    SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
+}

@@ -6,48 +6,66 @@
 #include "graphic_utils.h"
 #include "ssg_text.h"
 
-#define SSG_TEXT_LIMIT 240 // is this too much?
+//#define SSG_TEXT_LIMIT 240 // is this too much?
 
 void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
                   SDL_Surface* font)
 {
     // first we find out the position of the letter in the font image
+    /* characters that are not letters are a little hard coded
+     */
     char let = *letter;
     int x_font = 0, y_font = 1;
-    if (let <= 'Z')
-        y_font += 9*3 + 3;
-    else if (let > 'Z')
-        let -= ('a' - 'A');
-    x_font = let - 65;
-    if (x_font >= 14)
-        x_font++;
-    x_font %= 9;
-    x_font = 1 + 7*x_font;
-
-    switch (let)
+    if (let >= '0' && let < '9')
     {
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    //case 'Ñ':
-    case 'O':
-    case 'P':
-    case 'Q':
-        y_font += 10;
-        break;
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-        y_font += 20;
-        break;
+        x_font = let - '0';
+        x_font = 1 + 7*x_font;
+        y_font = 61;
+    }
+    else if (let == '9')
+    {
+        x_font = 1;
+        y_font = 71;
+    }
+    else
+    {
+        x_font = 0;
+        y_font = 1;
+        if (let <= 'Z')
+            y_font += 9*3 + 3;
+        else if (let > 'Z')
+            let -= ('a' - 'A');
+        x_font = let - 65;
+        if (x_font >= 14)
+            x_font++;
+        x_font %= 9;
+        x_font = 1 + 7*x_font;
+
+        switch (let)
+        {
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+            //case 'Ñ':
+        case 'O':
+        case 'P':
+        case 'Q':
+            y_font += 10;
+            break;
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+            y_font += 20;
+            break;
+        }
     }
 
     // now we copy the letter into the renderer
@@ -64,9 +82,9 @@ void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
 
 }
 
-void print_ssg_text(SDL_Renderer* renderer, struct ssg_text* text)
+void print_ssg_text(SDL_Renderer* renderer, struct ssg_text* text,
+                    SDL_Surface* font)
 {
-    SDL_Surface* font = IMG_Load("font1.png");
     SDL_Color clr;
     clr.r = text->red;
     clr.g = text->green;
@@ -103,7 +121,6 @@ void print_ssg_text(SDL_Renderer* renderer, struct ssg_text* text)
     }
     SDL_SetRenderDrawColor(renderer, render_color.r, render_color.g,
                            render_color.b, render_color.a);
-    SDL_FreeSurface(font);
 }
 
 void free_text(struct ssg_text* text)

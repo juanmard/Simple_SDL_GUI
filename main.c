@@ -8,7 +8,10 @@
 #include "ssg_button.h"
 #include "ssg_text.h"
 #include "ssg_menu.h"
+#include "ssg_menu_list.h"
 #include "welcome.h"
+#include "hall.h"
+#include "ssg_debug_text.h"
 
 const int INIT_WIDTH = 640;
 const int INIT_HEIGHT = 400;
@@ -18,12 +21,10 @@ void draw(SDL_Renderer* renderer)
     SDL_RenderPresent(renderer);
 }
 
-
-
 void event_loop(SDL_Renderer* renderer,
-                struct ssg_button_list* button_list1,
-                struct ssg_text* text1,
-                struct ssg_text* text2)
+                struct ssg_menu_list* menu_list,
+                struct ssg_debug_text* curr_menu_pointer,
+                SDL_Surface* font)
 {
     SDL_Event event;
     event.type = SDL_WINDOWEVENT;
@@ -38,9 +39,11 @@ void event_loop(SDL_Renderer* renderer,
         case SDL_WINDOWEVENT:
             if(event.window.event == SDL_WINDOWEVENT_RESIZED)
             {
-                print_button_list(renderer, button_list1);
-                print_ssg_text(renderer, text1);
-                print_ssg_text(renderer, text2);
+                print_menu(renderer, menu_list->menu, font);
+                // the "multiple-menus-being-displayed-at-the-same-
+                // time" problem's cause  might be here
+                update_menu_name_pointer(curr_menu_pointer, menu_list);
+                print_ssg_debug_text(renderer, curr_menu_pointer,font);
                 draw(renderer);
             }
             break;
@@ -50,8 +53,9 @@ void event_loop(SDL_Renderer* renderer,
                 if(mbl_pushed)
                     break;
                 mbl_pushed = 1;
-                check_pressed_buttons(button_list1, event.button.x,
-                                      event.button.y);
+                check_button(menu_list, menu_list->menu,
+                             event.button.x, event.button.y,
+                             renderer);
             }
             break;
         case SDL_MOUSEBUTTONUP:
@@ -60,22 +64,25 @@ void event_loop(SDL_Renderer* renderer,
         default:
             break;
         }
-        print_button_list(renderer, button_list1);
-        print_ssg_text(renderer, text1);
-        print_ssg_text(renderer, text2);
+        print_menu(renderer, menu_list->menu, font);
+        //print_background(renderer);
+        update_menu_name_pointer(curr_menu_pointer, menu_list);
+        print_ssg_debug_text(renderer, curr_menu_pointer,font);
         draw(renderer);
     }
 }
 
-int main(int argc, char** argv)
+int main()//int argc, char** argv)
 {
-    printf("Hello World, here starts the main\n");
-
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
+    /*
     SDL_Window* window = SDL_CreateWindow("Image", 0, 0, INIT_WIDTH,
               INIT_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    */
+    SDL_Window* window = SDL_CreateWindow("SSG - Tests", 0, 0,
+                          INIT_WIDTH, INIT_HEIGHT, SDL_WINDOW_SHOWN);
 
     if(window == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
@@ -86,7 +93,27 @@ int main(int argc, char** argv)
     if(renderer == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
+    SDL_Surface* font = IMG_Load("font1.png");
 
+    // MENU LIST
+    struct ssg_menu_list* menu_list = new_menu_list();
+
+    // MENU 1
+    struct ssg_menu* menu1 = add_menu(menu_list, "first menu :)");
+
+    // MENU 2
+    struct ssg_menu* menu2 = add_menu(menu_list, "(: second menu");
+
+    // DEBUG TEXT 1
+    /*
+      For the moment, let's just work with one ssg_debug_text, instead
+      of including it in a "ssg_debug_text_list" (which doesn't exist
+      for the moment), and even including this list into a "ssg_menu_
+      debug_list" (which doesn't exist neither)
+     */
+    struct ssg_debug_text* curr_menu_pointer =
+        new_ssg_debug_text(490, 0, 150, 70, 0xFF, 0xFF, 0xFF, str,
+                           &menu1->name);
 
     // BUTTON 1
     struct ssg_button* button_1 = new_button_std(350, 50, "pink_button\
@@ -100,19 +127,23 @@ button", 0x22, 0x44, 0xBB, "ANOTHER BUTTON");
     struct ssg_button* button_3 = new_button_std(275, 120, "orange_\
 button", 0xDD, 0x77, 0x00, "ORANGE BUTTON");
 
-    // BUTTON 3
+    // BUTTON 4
     struct ssg_button* button_4 = new_button_std(300, 250, "red_\
-button", 0xEE, 0x10, 0x10, "RED BUTTON");
+button", 0x9F, 0x08, 0x08, "RED BUTTON");
 
+    // BUTTON 5
+    struct ssg_button* button_5 = new_button_std(3, 50, "black_\
+button", 0x33, 0x33, 0x33, "black BUTTON");
 
     /*
-      BUTTON LIST
+      BUTTON LIST (we use directly "add to menu" instead of "add to
+      list")
      */
-    struct ssg_button_list* button_list1 = new_button_list();
-    add_button_to_list(button_list1, button_1);
-    add_button_to_list(button_list1, button_2);
-    add_button_to_list(button_list1, button_3);
-    add_button_to_list(button_list1, button_4);
+    add_button_to_menu(menu1, button_1); // pink
+    add_button_to_menu(menu1, button_2); // another
+    add_button_to_menu(menu1, button_3); // orange
+    add_button_to_menu(menu2, button_4); // red
+    add_button_to_menu(menu2, button_5); // black
 
     // TEXT 1
     struct ssg_text* text1 = new_ssg_text(50, 250, 160, 160,
@@ -125,14 +156,32 @@ como los hermanos Wachosky");
                                           0x00, 0xBB, 0xFF, "Te envio\
  poemas de mi puno y letra te envio canciones de cuatro cuarenta");
 
+    // TEXT 3
+    struct ssg_text* text3 = new_ssg_text(3, 10, 70, 50,
+                                          0x99, 0x99, 0x99, "Escribe\
+ texto aqui");
 
-    event_loop(renderer, button_list1, text1, text2);
+    // TEXT LIST 1
+    add_text_to_menu(menu1, text1); // matrix
+    add_text_to_menu(menu2, text2); // te envio
+    add_text_to_menu(menu2, text3); // escribe texto aqui
 
-    free_text(text1);
-    free_text(text2);
-    free_button_list(button_list1);
+    /*
+       MENU 1: pink, another, orange
+               matrix
+       MENU 2: red, black
+               te envio, escribe texto aqui
+     */
+
+    enable_menu(menu_list, menu1);
+
+    event_loop(renderer, menu_list, curr_menu_pointer, font);
+
+    free_debug_text(curr_menu_pointer);
+    free_menu_list(menu_list);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_FreeSurface(font);
     SDL_Quit();
 
     return EXIT_SUCCESS;

@@ -32,7 +32,8 @@ struct ssg_button
 
 int is_ssg_button_pressed(struct ssg_button* button, int x, int y);
 
-void print_ssg_button(SDL_Renderer* renderer, struct ssg_button* button);
+void print_ssg_button(SDL_Renderer* renderer, struct ssg_button* button,
+                      SDL_Surface* font);
 
 void * button_press_feedback(void* button_v);
 
