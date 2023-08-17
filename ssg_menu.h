@@ -2,18 +2,40 @@
 #define SSG_MENU_H
 
 #define MENU_NAME_LIMIT 15
+
+/*
+   An ssg_button_list is a linked list, in which each element has two
+   fields:
+   - button points to an ssg_button
+   - next points to the ssg_button_list which is the next element of
+   the linked list
+ */
 struct ssg_button_list
 {
     struct ssg_button* button;
     struct ssg_button_list* next;
 };
 
+/*
+   An ssg_text_list is also a linked list
+   Analog to ssg_button_list
+ */
 struct ssg_text_list
 {
     struct ssg_text* text;
     struct ssg_text_list* next;
 };
 
+/*
+   An ssg_menu is a set of objects (not OOP) that must be displayed
+   together. It has three fields
+   - name is a string that identifies the menu to differentiate it
+   from others
+   - buttons points to an ssg_button_list, which is the set of buttons
+   included in the ssg_menu
+   - texts points to an ssg_text_list, which is the set of texts
+   included in the ssg_menu
+ */
 struct ssg_menu
 {
     char name[MENU_NAME_LIMIT];

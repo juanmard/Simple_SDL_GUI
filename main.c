@@ -99,10 +99,10 @@ int main()//int argc, char** argv)
     struct ssg_menu_list* menu_list = new_menu_list();
 
     // MENU 1
-    struct ssg_menu* menu1 = add_menu(menu_list, "first menu :)");
+    struct ssg_menu* menu1 = add_menu(menu_list, "Welcome!");
 
     // MENU 2
-    struct ssg_menu* menu2 = add_menu(menu_list, "(: second menu");
+    struct ssg_menu* menu2 = add_menu(menu_list, "The Hall");
 
     // DEBUG TEXT 1
     /*

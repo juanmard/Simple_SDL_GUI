@@ -3,6 +3,12 @@
 
 #define SSG_TEXT_LIMIT 240 // is this too much?
 
+/*
+   An ssg_text is an object (not OOP) which has a position (x,y), a
+   width, a height, a colour (red, green, blue) and a string text
+   which it displays. It also has a size but that field hasn't been
+   used yet, since there's only one existing size for the moment
+ */
 struct ssg_text
 {
     int size;

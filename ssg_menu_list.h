@@ -1,6 +1,15 @@
 #ifndef SSG_MENU_LIST_H
 #define SSG_MENU_LIST_H
 
+/*
+   An ssg_menu_list is a linked list where each element has a pointer
+   to each one of the ssg_menus that shape the program/GUI (so as a
+   pointer to the next element of the linked list)
+   As all of the other linked list, ssg_menu_list has a sentinel, but
+   unlike the other ones, the value of the sentinel in an ssg_menu_list
+   is relevant, as the menu field points to the ssg_menu that must be
+   displayed at an instant t
+ */
 struct ssg_menu_list
 {
     struct ssg_menu* menu;

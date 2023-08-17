@@ -4,6 +4,16 @@
 #define BUTTON_NAME_LIMIT 30
 #define BUTTON_TAG_LIMIT 15
 
+/*
+   An ssg_button is an object (not the programming meaning, since C
+   isn't object oriented) which triggers a piece of code when being
+   clicked on. It has a position (x,y), a width w, a height h, a name
+   nombre (it's in spanish, I have to change that), a "natural colour"
+   encoded by three integers (red, green, blue), the colour of its
+   edges (red2, green2, blue2), a the colour that is visible, the
+   one that is displayed at a specific moment (visible_red, ...) and
+   a ssg_text which is a text displayed on the button (tag)
+ */
 struct ssg_button
 {
     int x;

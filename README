@@ -1,18 +1,148 @@
-Welcome, this is SSG (not the gun) which stands for Simple SDL GUI.
+Welcome, this is SSG which stands for Simple SDL GUI. SSG is a set of
+functions and structures helpful to create Graphical User Interfaces.
+It uses the SDL2 and SDL2_image libraries.
+
+The purpose of this project is to have my own set of utilities to make
+my own programs/projects with a GUI. I'm making this project to learn
+and practice programming in C as well.
+
+SUMMARY:
+1) Explanation of the structure of SSG
+2) How to setup the elements of SSG
+3) How to compile the main.c for testing
+
+
+===============================================================
+==================== 1) EXPLANATION OF SSG ====================
+===============================================================
+
+SSG is divided into :
+a) the elements with which the user can interact
+b) the structures where these elements are stored
+c) the functions that make these elements interact with each other and
+   with the user
+
+~~~~~~~~~~~ a) the elements/objects ~~~~~~~~~~~
+
+Note: Each time I'll say "object" I will be meaning the structures in
+the C language that represent elements with which the user can interact.
+I don't mean to refer to the "objects" of an Object Oriented programming
+language.
+
+The elements with which the user can interact are:
+
+- ssg_button:
+    These are buttons that call a function when being pressed so as to
+    trigger a certain action
+
+- ssg_text:
+    These are rectangles showing a text with a given font and colour
+
+- ssg_debug_text:
+    These are similar to ssg_texts, but they show a variable's value
+    and not a "static" string, they display a black rectangle
+    behind the text and they are displayed at last so that they stay
+    above of any other object in the screen
+
+Note: To learn more deeply about these elements, check out their header
+files to learn about the structures' fields and check out their C files
+to learn about the functions associated with them
+
+~~~~~~~~~~~ b) where are the objects stored? ~~~~~~~~~~~
+
+Each one of these objects are stored in a linked list, and the pointers
+pointing to these linked lists are stored in an ssg_menu, which is also
+stored in a linked list. To make it simpler:
+
+
+ssg_button ------------> ssg_button_list linked list
+             stored in
+ssg_text   ------------> ssg_text_list linked list
+             stored in
+
+ssg_button_list <------------------------\
+                   has a pointer to       --- ssg_menu
+ssg_text_list <--------------------------/
+
+
+An ssg_button_list stores all the buttons that must be displayed
+together, an ssg_text_list stores all the texts that must be displayed
+together. An ssg_menu points to an ssg_button_list and an ssg_text_list,
+so an ssg_menu "stores" all the buttons and texts that must be displayed
+together.
+
+
+ssg_menu1 --\
+ssg_menu2 ---\
+ssg_menu4 ----------- "stored in" --------> ssg_menu_list
+...       ---/
+ssg_menuN --/
+
+
+All of the menus that can be displayed are stored in one single
+ssg_menu_list linked list (for a better understanding, read the header
+files).
+
+
+The ssg_debug_texts are not stored in any linked list for the moment.
+
+~~~~~~~~~~~ c) the functions ~~~~~~~~~~~
+
+The functions of each element or linked list can be found in each one
+of the ssg_*****.c files.
+
+When a button is pressed, the function check_button() is called, which
+checks which is the menu that is currently enabled, and depending on
+that, it calls the function that handles which button has been pressed
+that is related to the current menu.
+Let's say the current menu is the menu called "Welcome!", the function
+that handles what action must be done depending on the button that has
+been pressed is written in the welcome.c file. Otherwise, if it's the
+"The Hall" menu that is enabled, the function that handles that is
+written in the hall.c file.
+
+
+===============================================================
+====================== 2) SETTING SSG UP ======================
+===============================================================
+
+Once we've copied all of the ssg_*****.c and .h files, we need a main.c
+file (you might want to just copy the main.c file in the git repo).
+First you need to set up SDL: initiating SDL, creating a window and
+creating a renderer. Then we load the font with IMG_Load().
+
+Now we have to create all of the "objects"/elements with which the
+user will be able to interact and all the linked lists that will store
+them. We create an ssg_menu_list, we create all the ssg_menus we want
+and we add them to the ssg_menu_list. For each ssg_menu we create, we
+have to add a case to the check_button() function in the
+ssg_menu_list.c, we have to create a C file to write the function
+that handles which button from that menu has been pressed (in my
+example, the welcome.c file has the check_pressed_buttons1() function
+and the hall.c file has the check_pressed_buttons2() function). You
+also have to add as many ssg_buttons and ssg_texts to the ssg_menus
+you need
+
+Then you need to enable the menu you want to be displayed at first
+when executing the program. Finally, call the event_loop() function.
+
+Don't forget to free all of the ssg_menu_lists and ssg_debug_texts that
+have been allocated in the heap, so as the window, renderer, font
+surface and also quit SDL.
+
+
+===============================================================
+==================== 3) COMPILING THE CODE ====================
+===============================================================
 
 If you want to compile this code you'll need SDL2 and SDL2_image.
 
-To compile it you have to execute `make` and then `./main` in the shell
-while in the "Simple_SDL_GUI" folder
+To compile it you have to execute
 
-What is coded to date?
+$ make
+$ ./main
 
-------------SSG_BUTTONS------------
-Buttons have an effect when being pressed for feedback purposes
-They include a SSG_TEXT box which is kind of a tag
-
-------------SSG_TEXT------------
-Texts only have one font and one possible size for the moment
-
+in the shell while in the "Simple_SDL_GUI" folder.
+The main.c and the menus C files are only an example.
 
 August 2023 - Francisco Lara Rico

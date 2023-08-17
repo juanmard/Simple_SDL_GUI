@@ -51,7 +51,7 @@ void check_pressed_buttons2(struct ssg_menu_list* menu_list,
         }
 
         if (enable_menu(menu_list, find_menu_name(menu_list,
-                                  "first menu :)")))
+                                  "Welcome!")))
             errx(EXIT_FAILURE, "enable_menu()");
     }
     if ((button =

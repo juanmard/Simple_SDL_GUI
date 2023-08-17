@@ -9,6 +9,10 @@
 #include "welcome.h"
 #include "hall.h"
 
+/*
+   new_menu_list()
+   Returns a pointer to a new heap allocated ssg_menu_list
+ */
 struct ssg_menu_list* new_menu_list()
 {
     struct ssg_menu_list* new = malloc(sizeof(struct ssg_menu_list));
@@ -17,6 +21,12 @@ struct ssg_menu_list* new_menu_list()
     return new;
 }
 
+/*
+   add_menu()
+   Adds a new heap allocated ssg_menu with a given name to the
+   ssg_menu_list pointed to by list. Allocates a new ssg_menu_list too,
+   which is a new element in the linked list
+ */
 struct ssg_menu* add_menu(struct ssg_menu_list* list, char* name)
 {
     struct ssg_menu_list* p = list;
@@ -28,6 +38,12 @@ struct ssg_menu* add_menu(struct ssg_menu_list* list, char* name)
     return p->next->menu;
 }
 
+/*
+   free_menu_list()
+   Frees the memory region pointed to by list, so as each menu in the
+   ssg_menu_list and each ssg_button_list and each ssg_text_list in
+   each of those ssg_menus
+ */
 void free_menu_list(struct ssg_menu_list* list)
 {
     struct ssg_menu_list* p = list;
@@ -48,6 +64,11 @@ void free_menu_list(struct ssg_menu_list* list)
     }
 }
 
+/*
+   find_menu_name()
+   Returns the pointer to an ssg_menu the name of which is name, as
+   long as it is stored in the ssg_menu_list pointed to by list
+ */
 struct ssg_menu* find_menu_name(struct ssg_menu_list* list,
                                 char* name)
 {
@@ -60,6 +81,13 @@ struct ssg_menu* find_menu_name(struct ssg_menu_list* list,
         return p->menu;
 }
 
+/*
+   enable_menu()
+   Makes list->menu point to the ssg_menu pointed to by menu, where
+   list is a pointer to an ssg_menu_list. In other words, it
+   activates an ssg_menu, which means changing the current ssg_menu
+   that is being displayed
+ */
 int enable_menu(struct ssg_menu_list* list, struct ssg_menu* menu)
 {
     if (menu == NULL)
@@ -71,6 +99,12 @@ int enable_menu(struct ssg_menu_list* list, struct ssg_menu* menu)
     }
 }
 
+/*
+   print_menu_list_console()
+   For debugging purposes only
+   Prints the ssg_menu_list pointed to by list on the standard
+   output stream
+ */
 void print_menu_list_console(struct ssg_menu_list* list)
 {
     printf("########PRINTING MENU########\n");
@@ -85,17 +119,27 @@ void print_menu_list_console(struct ssg_menu_list* list)
     }
 }
 
+/*
+   check_button()
+   Calls the proper function to handle which ssg_button is being
+   pressed depending on the current ssg_menu. menu_list points to the
+   ssg_menu_list that stores all of the ssg_menus. menu points to the
+   current menu, which is also the menu field of the sentinel of the
+   ssg_menu_list linked list. (x,y) are the coordinates where the
+   Mouse Left Button has been pressed. renderer points to the
+   SDL_Renderer where the buttons are being displayed
+ */
 void check_button(struct ssg_menu_list* menu_list,
                   struct ssg_menu* menu, int x, int y,
-    SDL_Renderer* renderer)
+                  SDL_Renderer* renderer)
 {
     char name[MENU_NAME_LIMIT];
     strncpy(name, menu->name, MENU_NAME_LIMIT);
     name[MENU_NAME_LIMIT - 1] = 0;
-    if (are_arrays_equal(name, "first menu :)"))
+    if (are_arrays_equal(name, "Welcome!"))
         check_pressed_buttons1(menu_list, menu->buttons, x, y,
                                renderer);
-    else if (are_arrays_equal(name, "(: second menu"))
+    else if (are_arrays_equal(name, "The Hall"))
         check_pressed_buttons2(menu_list, menu->buttons, x, y,
                                renderer);
 }

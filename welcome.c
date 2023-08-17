@@ -57,7 +57,7 @@ void check_pressed_buttons1(struct ssg_menu_list* menu_list,
             SDL_RenderPresent(renderer);
         }
         enable_menu(menu_list, find_menu_name(menu_list,
-                                              "(: second menu"));
+                                              "The Hall"));
     }
     if ((button =
          is_button_pressed_from_name(list, "cian_button", x, y)))

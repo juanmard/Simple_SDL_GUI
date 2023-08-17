@@ -6,22 +6,29 @@
 #include "ssg_button.h"
 #include "ssg_text.h"
 
-
+/*
+   is_ssg_button_pressed()
+   This functions returns 1 if the ssg_button pointed to by button
+   has been pressed (at the coordinates x,y)
+ */
 int is_ssg_button_pressed(struct ssg_button* button, int x, int y)
 {
     return x>=button->x && x<=button->x+button->w
         && y>=button->y && y<=button->y+button->h;
 }
 
+/*
+   print_ssg_button()
+   This function displays the ssg_button pointed to by button in the
+   SDL_Renderer pointed to by renderer, and its tag too (with the
+   font "font", which is an SDL_Surface* loaded from the image
+   font1.png
+ */
 void print_ssg_button(SDL_Renderer* renderer,
                       struct ssg_button* button,
                       SDL_Surface* font)
 {
-    /*
-    for (size_t i = 0; i<30; i++)
-        printf("$$$$$    PRINTING BUTTON %s\n", button->tag->text);
-    */
-
+    //we save the current render drawing color to not lose it
     SDL_Color rgb;
     SDL_GetRenderDrawColor(renderer, &rgb.r, &rgb.g, &rgb.b, &rgb.a);
     SDL_SetRenderDrawColor(renderer, button->red2, button->green2,
@@ -51,6 +58,12 @@ void print_ssg_button(SDL_Renderer* renderer,
     print_ssg_text(renderer, button->tag, font);
 }
 
+/*
+   button_press_feedback()
+   This function changes the colour of the ssg_button pointed to by
+   button_v suddenly, then goes back to its original colour slowly,
+   so as to give some feedback to the user when pressing a button
+ */
 void * button_press_feedback(void* button_v)
 {
     struct ssg_button* button = (struct ssg_button*)button_v;
@@ -86,6 +99,10 @@ void * button_press_feedback(void* button_v)
     return NULL;
 }
 
+/*
+   clrcpy()
+   This function only copies the button's colour to its visible colour
+ */
 void clrcpy(struct ssg_button* button)
 {
     button->visible_red = button->red;
@@ -93,17 +110,27 @@ void clrcpy(struct ssg_button* button)
     button->visible_blue = button->blue;
 }
 
+/*
+   free_button()
+   This function frees the memory region pointed to by button, so as
+   the ssg_text tag
+ */
 void free_button(struct ssg_button* button)
 {
     free_text(button->tag);
     free(button);
 }
 
+/*
+   new_button_std()
+   This function returns a pointer to a new heap allocated ssg_button.
+   Instead of giving the programmer the possibility to fully customize
+   the button, this function helps them making buttons fast, as some
+   of the fields are filled automatically by the funtion
+ */
 struct ssg_button* new_button_std(int x, int y, char nombre[],
                        int red, int green, int blue, char* tag)
 {
-    /* this is a fast way to create a button under the SSG standard
-     */
     struct ssg_button* new_button = malloc(sizeof(struct ssg_button));
     new_button->x = x;
     new_button->y = y;

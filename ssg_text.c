@@ -6,8 +6,12 @@
 #include "graphic_utils.h"
 #include "ssg_text.h"
 
-//#define SSG_TEXT_LIMIT 240 // is this too much?
-
+/*
+   print_letter()
+   This function displays the character pointed to by letter (if it's
+   a (capital) letter or a number), at the coordinates (x,y), in the
+   SDL_Renderer* renderer, using the font "font"
+ */
 void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
                   SDL_Surface* font)
 {
@@ -82,6 +86,11 @@ void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
 
 }
 
+/*
+   print_ssg_text()
+   Displays the ssg_text pointed to by text in the SDL_Renderer*
+   renderer with the font "font"
+ */
 void print_ssg_text(SDL_Renderer* renderer, struct ssg_text* text,
                     SDL_Surface* font)
 {
@@ -123,14 +132,22 @@ void print_ssg_text(SDL_Renderer* renderer, struct ssg_text* text,
                            render_color.b, render_color.a);
 }
 
+/*
+   free_text()
+   Frees the memory region in which the ssg_text is allocated
+ */
 void free_text(struct ssg_text* text)
 {
-    /* frees the memory in which the ssg_text is allocated
-     */
     free(text->text);
     free(text);
 }
 
+/*
+   new_ssg_text()
+   Returns a pointer to a new heap allocated ssg_text with the given
+   coordinates (x,y), dimensions (w,h), colour (red, green, blue) and
+   text "text"
+ */
 struct ssg_text* new_ssg_text(int x, int y, int w, int h,
                               int red, int green, int blue,
                               char* text)

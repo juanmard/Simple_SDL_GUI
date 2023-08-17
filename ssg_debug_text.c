@@ -8,6 +8,14 @@
 #include "ssg_menu_list.h"
 #include "ssg_debug_text.h"
 
+/*
+   print_ssg_debug_text()
+   Analog to print_ssg_text(), but works with ssg_debug_text
+   To be precise, it also draws a black rectangle behind the text
+   AND it updates the text field of the ssg_debug_text pointed to by
+   text depending on the type of variable pointed to by the
+   value_type field BEFORE displaying it
+ */
 void print_ssg_debug_text(SDL_Renderer* renderer,
                     struct ssg_debug_text* text,
                     SDL_Surface* font)
@@ -77,6 +85,10 @@ void print_ssg_debug_text(SDL_Renderer* renderer,
                            render_color.b, render_color.a);
 }
 
+/*
+   free_debug_text()
+   Analog to free_text()
+ */
 void free_debug_text(struct ssg_debug_text* text)
 {
     /* frees the memory in which the ssg_debug_text is allocated
@@ -85,6 +97,10 @@ void free_debug_text(struct ssg_debug_text* text)
     free(text);
 }
 
+/*
+   new_ssg_debug_text()
+   Analog to new_ssg_text()
+ */
 struct ssg_debug_text* new_ssg_debug_text(int x, int y, int w, int h,
                                           int red, int green, int blue,
                                           enum value_type value_type,
@@ -105,17 +121,17 @@ struct ssg_debug_text* new_ssg_debug_text(int x, int y, int w, int h,
     return new_text;
 }
 
+/*
+   The sole purpose of this function is to serve the kind of
+   ssg_debug_texts that display the name of the current menu
+   in the screen. It updates the value field, which points to
+   the variable that must be displayed, it sets it to the name
+   of the menu that is currently being displayed, which is also
+   the menu field of the first element of the ssg_menu_list
+   (the sentinel)
+ */
 void update_menu_name_pointer(struct ssg_debug_text* text,
                               struct ssg_menu_list* menu_list)
 {
-    /*
-       The sole purpose of this function is to serve the kind of
-       ssg_debug_texts that display the name of the current menu
-       in the screen. It updates the value field, which points to
-       the variable that must be displayed, it sets it to the name
-       of the menu that is currently being displayed, which is also
-       the menu field of the first element of the ssg_menu_list
-       (the sentinel)
-     */
     text->value = menu_list->menu->name;
 }
