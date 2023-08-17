@@ -113,7 +113,7 @@ void print_button_list_console(struct ssg_button_list* list)
     while (p)
     {
         printf("\
-elt number %d\n\
+elt number %zu\n\
 pointer: %p\n\
 button: %p\n\
 next: %p\n", i, p, p->button, p->next);
@@ -199,7 +199,7 @@ void print_text_list_console(struct ssg_text_list* list)
     while (p)
     {
         printf("\
-elt number %d\n\
+elt number %zu\n\
 pointer: %p\n\
 text: %p\n\
 next: %p\n", i, p, p->text, p->next);
