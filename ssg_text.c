@@ -20,6 +20,16 @@ void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
      */
     char let = *letter;
     int x_font = 0, y_font = 1;
+    if (let >= '!' && let <= '~')
+    {
+        let = let - '!';
+        x_font = let;
+        x_font %= 9;
+        x_font = 1 + 7*x_font;
+        y_font = let / 9;
+        y_font = 1 + 10*y_font;
+    }
+    /*
     if (let >= '0' && let < '9')
     {
         x_font = let - '0';
@@ -71,6 +81,7 @@ void print_letter(SDL_Renderer* renderer, char* letter, int x, int y,
             break;
         }
     }
+    */
 
     // now we copy the letter into the renderer
     for (size_t i = 0; i<6; i++)

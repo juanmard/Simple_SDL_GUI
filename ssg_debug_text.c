@@ -20,6 +20,9 @@ void print_ssg_debug_text(SDL_Renderer* renderer,
                     struct ssg_debug_text* text,
                     SDL_Surface* font)
 {
+    /*
+        TODO: optimize the drawing of the black rectangle
+     */
 
     switch(text->value_type)
     {
@@ -38,8 +41,6 @@ void print_ssg_debug_text(SDL_Renderer* renderer,
     }
     *( text->text + SSG_TEXT_LIMIT - 1 ) = 0;
 
-
-
     SDL_Color clr;
     clr.r = text->red;
     clr.g = text->green;
@@ -49,19 +50,45 @@ void print_ssg_debug_text(SDL_Renderer* renderer,
     SDL_Color render_color;
     SDL_GetRenderDrawColor(renderer, &render_color.r, &render_color.g,
                            &render_color.b, &render_color.a);
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-    for (int i = 0; i < text->h-1; i++)
-    {
-        SDL_RenderDrawLine(renderer, text->x+1, text->y+1+i,
-                           text->x+text->w-1, text->y+1+i);
-    }
-
-    SDL_SetRenderDrawColor(renderer, clr.r, clr.g, clr.b, clr.a);
 
     int letters_per_row = text->w/7;
     int letters_per_col = text->h/10;
 
     char* curr_let = text->text;
+
+
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    /*
+    for (int i = 0; i < text->h-1; i++)
+    {
+        SDL_RenderDrawLine(renderer, text->x+1, text->y+1+i,
+                           text->x+text->w-1, text->y+1+i);
+    }
+    */
+
+    // printing all the black rectangles (before the letters)
+
+    for (int j = 0; j<letters_per_col; j++)
+    {
+        if (!*curr_let)
+            break;
+        for (int i = 0; i<letters_per_row; i++)
+        {
+            if (!*curr_let)
+                break;
+
+            for (int k = 0; k<10; k++)
+            {
+                SDL_RenderDrawLine(renderer, text->x+(i*7),
+                                   text->y+(j*10)+k,
+                                   text->x+(i*7)+7, text->y+(j*10)+k);
+            }
+            curr_let++;
+        }
+    }
+    curr_let = text->text;
+
+    SDL_SetRenderDrawColor(renderer, clr.r, clr.g, clr.b, clr.a);
 
     for (int j = 0; j<letters_per_col; j++)
     {

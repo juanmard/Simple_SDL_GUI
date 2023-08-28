@@ -58,14 +58,14 @@ void getRGB(SDL_Surface* surface, int x, int y, SDL_Color *c)
 /*
    print_background()
    This function fills this SDL_Renderer* renderer with the colour
-   black. It is a little hard-coded regarding the dimensions of the
+   grey. It is a little hard-coded regarding the dimensions of the
    window, I should fix that
  */
 void print_background(SDL_Renderer* renderer)
 {
     SDL_Color rgb;
     SDL_GetRenderDrawColor(renderer, &rgb.r, &rgb.g, &rgb.b, &rgb.a);
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0x88, 0x88, 0x88, 0xFF);
     for (int i = 0; i<420; i++)
     {
         SDL_RenderDrawLine(renderer, 0, i, 640, i);

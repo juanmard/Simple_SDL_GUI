@@ -23,6 +23,7 @@ void draw(SDL_Renderer* renderer)
 
 void event_loop(SDL_Renderer* renderer,
                 struct ssg_menu_list* menu_list,
+                //struct ssg_menu_list* sub_menu_list,
                 struct ssg_debug_text* curr_menu_pointer,
                 SDL_Surface* font)
 {
@@ -42,6 +43,7 @@ void event_loop(SDL_Renderer* renderer,
                 print_menu(renderer, menu_list->menu, font);
                 // the "multiple-menus-being-displayed-at-the-same-
                 // time" problem's cause  might be here
+                //print_menu(renderer, sub_menu_list->menu, font);
                 update_menu_name_pointer(curr_menu_pointer, menu_list);
                 print_ssg_debug_text(renderer, curr_menu_pointer,font);
                 draw(renderer);
@@ -64,8 +66,9 @@ void event_loop(SDL_Renderer* renderer,
         default:
             break;
         }
+        print_background(renderer);
         print_menu(renderer, menu_list->menu, font);
-        //print_background(renderer);
+        //print_menu(renderer, sub_menu_list->menu, font);
         update_menu_name_pointer(curr_menu_pointer, menu_list);
         print_ssg_debug_text(renderer, curr_menu_pointer,font);
         draw(renderer);
@@ -104,35 +107,24 @@ int main()//int argc, char** argv)
     // MENU 2
     struct ssg_menu* menu2 = add_menu(menu_list, "The Hall");
 
-    // DEBUG TEXT 1
-    /*
-      For the moment, let's just work with one ssg_debug_text, instead
-      of including it in a "ssg_debug_text_list" (which doesn't exist
-      for the moment), and even including this list into a "ssg_menu_
-      debug_list" (which doesn't exist neither)
-     */
-    struct ssg_debug_text* curr_menu_pointer =
-        new_ssg_debug_text(490, 0, 150, 70, 0xFF, 0xFF, 0xFF, str,
-                           &menu1->name);
-
     // BUTTON 1
-    struct ssg_button* button_1 = new_button_std(350, 50, "pink_button\
+    struct ssg_button* button_1 = new_button_std(250, 50, "pink_button\
 ", 0xFF, 0x00, 0x55, "PINK BUTTON");
 
     // BUTTON 2
-    struct ssg_button* button_2 = new_button_std(200, 50, "cian_\
+    struct ssg_button* button_2 = new_button_std(250, 120, "cian_\
 button", 0x22, 0x44, 0xBB, "ANOTHER BUTTON");
 
     // BUTTON 3
-    struct ssg_button* button_3 = new_button_std(275, 120, "orange_\
+    struct ssg_button* button_3 = new_button_std(250, 190, "orange_\
 button", 0xDD, 0x77, 0x00, "ORANGE BUTTON");
 
     // BUTTON 4
-    struct ssg_button* button_4 = new_button_std(300, 250, "red_\
+    struct ssg_button* button_4 = new_button_std(250, 120, "red_\
 button", 0x9F, 0x08, 0x08, "RED BUTTON");
 
     // BUTTON 5
-    struct ssg_button* button_5 = new_button_std(3, 50, "black_\
+    struct ssg_button* button_5 = new_button_std(250, 50, "black_\
 button", 0x33, 0x33, 0x33, "black BUTTON");
 
     /*
@@ -146,15 +138,15 @@ button", 0x33, 0x33, 0x33, "black BUTTON");
     add_button_to_menu(menu2, button_5); // black
 
     // TEXT 1
-    struct ssg_text* text1 = new_ssg_text(50, 250, 160, 160,
-           0x11, 0xFF, 0x33, "The Matrix es una pelicula de mil \
-novecientos noventa y nueve dirigida por los antiguamente conocidos \
-como los hermanos Wachosky");
+    struct ssg_text* text1 = new_ssg_text(350, 50, 180, 160,
+           0x11, 0xFF, 0x33, "Press this pink button to go to The \
+Hall");
 
     // TEXT 2
     struct ssg_text* text2 = new_ssg_text(350, 170, 200, 140,
-                                          0x00, 0xBB, 0xFF, "Te envio\
- poemas de mi puno y letra te envio canciones de cuatro cuarenta");
+                                          0x00, 0xBB, 0xFF, "!\"#$%&'(\
+)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklm\
+nopqrstuvwxyz{|}~");
 
     // TEXT 3
     struct ssg_text* text3 = new_ssg_text(3, 10, 70, 50,
@@ -162,7 +154,7 @@ como los hermanos Wachosky");
  texto aqui");
 
     // TEXT LIST 1
-    add_text_to_menu(menu1, text1); // matrix
+    add_text_to_menu(menu1, text1); // press to go
     add_text_to_menu(menu2, text2); // te envio
     add_text_to_menu(menu2, text3); // escribe texto aqui
 
@@ -173,10 +165,43 @@ como los hermanos Wachosky");
                te envio, escribe texto aqui
      */
 
+    // MENU LIST 2 sub_menu
+    /*
+    struct ssg_menu_list* sub_menu_list = new_menu_list();
+    struct ssg_menu* sub_menu1 = add_menu(sub_menu_list, "Sub-Menu");
+    struct ssg_button* sub_button1 =
+        new_button_std(360, 50, "sub_button1_name", 0xFF, 0xFF,
+                       0xFF, "Sub");
+    add_button_to_menu(sub_menu1, sub_button1);
+    */
+
+    // DEBUG TEXT 1
+    /*
+      For the moment, let's just work with one ssg_debug_text, instead
+      of including it in a "ssg_debug_text_list" (which doesn't exist
+      for the moment), and even including this list into a "ssg_menu_
+      debug_list" (which doesn't exist neither)
+     */
+    struct ssg_debug_text* curr_menu_pointer =
+        new_ssg_debug_text(490, 0, 150, 16, 0xFF, 0xFF, 0xFF, pointer,
+                           &menu_list->menu->name);
+
     enable_menu(menu_list, menu1);
+    //printf("Antes de pintar\n");
+    /*
+    print_background(renderer);
+    draw(renderer);
+    */
+    print_background(renderer);
+    draw(renderer);
+    //printf("Despues de pintar\n");
 
-    event_loop(renderer, menu_list, curr_menu_pointer, font);
+    //enable_menu(sub_menu_list, sub_menu1);
 
+    event_loop(renderer, menu_list, //sub_menu_list,
+               curr_menu_pointer, font);
+
+    //free_menu_list(sub_menu_list);
     free_debug_text(curr_menu_pointer);
     free_menu_list(menu_list);
     SDL_DestroyWindow(window);
