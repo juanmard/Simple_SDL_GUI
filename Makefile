@@ -1,20 +1,20 @@
 # Makefile of gui-game
 
-
-CC = gcc -fsanitize=address
-CPPFLAGS =
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+CC = gcc
+CPPFLAGS = -Iinclude
+CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image` -g \
+		 -fsanitize=address
 LDFLAGS = -pthread
-LDLIBS = `pkg-config --libs sdl2 SDL2_image`
+LDLIBS = `pkg-config --libs sdl2 SDL2_image` -fsanitize=address
 
-SRC = main.c ssg_button.c ssg_text.c graphic_utils.c ssg_menu.c \
-	welcome.c my_str.c ssg_menu_list.c hall.c ssg_debug_text.c
+SRC = main.c src/ssg_button.c src/ssg_text.c src/graphic_utils.c \
+	  src/ssg_menu.c src/welcome.c src/my_str.c src/ssg_menu_list.c src/hall.c\
+	  src/ssg_debug_text.c src/ssg_gui.c src/ssg.c
 OBJ = ${SRC:.c=.o}
 
 all: main
 
 main: ${OBJ}
-
 
 .PHONY: clean
 

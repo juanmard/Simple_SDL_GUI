@@ -4,6 +4,8 @@
 #define BUTTON_NAME_LIMIT 30
 #define BUTTON_TAG_LIMIT 15
 
+#include "ssg_gui.h"
+
 /*
    An ssg_button is an object (not the programming meaning, since C
    isn't object oriented) which triggers a piece of code when being
@@ -38,6 +40,9 @@ struct ssg_button
     int blue2;
 
     struct ssg_text* tag;
+
+    SDL_Texture* image;
+    SDL_Surface *image_surface;
 };
 
 int is_ssg_button_pressed(struct ssg_button* button, int x, int y);
@@ -53,5 +58,11 @@ void free_button(struct ssg_button* button);
 
 struct ssg_button* new_button_std(int x, int y, char nombre[],
                        int red, int green, int blue, char* tag);
+struct ssg_button* new_button_with_image(int x, int y,
+                                         char name[], int red2,
+                                         int green2, int blue2,
+                                         char* tag,
+                                         char *image_path,
+                                         struct ssg_gui *gui);
 
 #endif

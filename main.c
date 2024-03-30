@@ -1,119 +1,51 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <err.h>
 #include <stddef.h>
 
 #include "graphic_utils.h"
+#include "ssg.h"
 #include "ssg_button.h"
 #include "ssg_text.h"
 #include "ssg_menu.h"
 #include "ssg_menu_list.h"
 #include "welcome.h"
 #include "hall.h"
-#include "ssg_debug_text.h"
 
 const int INIT_WIDTH = 640;
 const int INIT_HEIGHT = 400;
 
-void draw(SDL_Renderer* renderer)
+int main(void)//int argc, char** argv)
 {
-    SDL_RenderPresent(renderer);
-}
+    struct ssg_gui *my_gui = init_gui("SSG - Tests");
 
-void event_loop(SDL_Renderer* renderer,
-                struct ssg_menu_list* menu_list,
-                //struct ssg_menu_list* sub_menu_list,
-                struct ssg_debug_text* curr_menu_pointer,
-                SDL_Surface* font)
-{
-    SDL_Event event;
-    event.type = SDL_WINDOWEVENT;
-    int mbl_pushed = 0;
-    while(1)
+    if (set_font(my_gui, "img/font1.png") != 0)
     {
-        SDL_WaitEventTimeout(&event,20);
-        switch(event.type)
-        {
-        case SDL_QUIT:
-            return;
-        case SDL_WINDOWEVENT:
-            if(event.window.event == SDL_WINDOWEVENT_RESIZED)
-            {
-                print_menu(renderer, menu_list->menu, font);
-                // the "multiple-menus-being-displayed-at-the-same-
-                // time" problem's cause  might be here
-                //print_menu(renderer, sub_menu_list->menu, font);
-                update_menu_name_pointer(curr_menu_pointer, menu_list);
-                print_ssg_debug_text(renderer, curr_menu_pointer,font);
-                draw(renderer);
-            }
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if(event.button.button == SDL_BUTTON_LEFT)
-            {
-                if(mbl_pushed)
-                    break;
-                mbl_pushed = 1;
-                check_button(menu_list, menu_list->menu,
-                             event.button.x, event.button.y,
-                             renderer);
-            }
-            break;
-        case SDL_MOUSEBUTTONUP:
-            if(event.button.button == SDL_BUTTON_LEFT)
-                mbl_pushed = 0;
-        default:
-            break;
-        }
-        print_background(renderer);
-        print_menu(renderer, menu_list->menu, font);
-        //print_menu(renderer, sub_menu_list->menu, font);
-        update_menu_name_pointer(curr_menu_pointer, menu_list);
-        print_ssg_debug_text(renderer, curr_menu_pointer,font);
-        draw(renderer);
+        fprintf(stderr, "LOG  : Closing GUI and returning with error code\n");
+        close_gui(my_gui);
+        return 1;
     }
-}
-
-int main()//int argc, char** argv)
-{
-    if(SDL_Init(SDL_INIT_VIDEO) != 0)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-    /*
-    SDL_Window* window = SDL_CreateWindow("Image", 0, 0, INIT_WIDTH,
-              INIT_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    */
-    SDL_Window* window = SDL_CreateWindow("SSG - Tests", 0, 0,
-                          INIT_WIDTH, INIT_HEIGHT, SDL_WINDOW_SHOWN);
-
-    if(window == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1,
-                                      SDL_RENDERER_ACCELERATED);
-
-    if(renderer == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-    SDL_Surface* font = IMG_Load("font1.png");
-
-    // MENU LIST
-    struct ssg_menu_list* menu_list = new_menu_list();
 
     // MENU 1
-    struct ssg_menu* menu1 = add_menu(menu_list, "Welcome!");
+    struct ssg_menu* menu1 = add_menu(my_gui->menu_list, "Welcome!");
 
     // MENU 2
-    struct ssg_menu* menu2 = add_menu(menu_list, "The Hall");
+    struct ssg_menu* menu2 = add_menu(my_gui->menu_list, "The Hall");
 
     // BUTTON 1
     struct ssg_button* button_1 = new_button_std(250, 50, "pink_button\
 ", 0xFF, 0x00, 0x55, "PINK BUTTON");
 
     // BUTTON 2
-    struct ssg_button* button_2 = new_button_std(250, 120, "cian_\
-button", 0x22, 0x44, 0xBB, "ANOTHER BUTTON");
+    struct ssg_button* button_2 =
+        new_button_with_image(250, 120, "cian_button", 0x22, 0x44,
+                              0xBB, "ANOTHER BUTTON",
+                              "img/button_image.png", my_gui);
+    if (!button_2)
+    {
+        fprintf(stderr, "LOG  : Closing GUI and returning with error code\n");
+        free_button(button_1);
+        close_gui(my_gui);
+        return 1;
+    }
 
     // BUTTON 3
     struct ssg_button* button_3 = new_button_std(250, 190, "orange_\
@@ -154,9 +86,9 @@ nopqrstuvwxyz{|}~");
  texto aqui");
 
     // TEXT LIST 1
-    add_text_to_menu(menu1, text1); // press to go
-    add_text_to_menu(menu2, text2); // te envio
-    add_text_to_menu(menu2, text3); // escribe texto aqui
+    add_text_to_menu(menu1, text1);
+    add_text_to_menu(menu2, text2);
+    add_text_to_menu(menu2, text3);
 
     /*
        MENU 1: pink, another, orange
@@ -184,30 +116,18 @@ nopqrstuvwxyz{|}~");
      */
     struct ssg_debug_text* curr_menu_pointer =
         new_ssg_debug_text(490, 0, 150, 16, 0xFF, 0xFF, 0xFF, pointer,
-                           &menu_list->menu->name);
+                           &my_gui->menu_list->menu->name);
 
-    enable_menu(menu_list, menu1);
-    //printf("Antes de pintar\n");
-    /*
-    print_background(renderer);
-    draw(renderer);
-    */
-    print_background(renderer);
-    draw(renderer);
-    //printf("Despues de pintar\n");
+    enable_menu(my_gui->menu_list, menu1);
+    print_background(my_gui->renderer);
+    draw(my_gui);
 
-    //enable_menu(sub_menu_list, sub_menu1);
 
-    event_loop(renderer, menu_list, //sub_menu_list,
-               curr_menu_pointer, font);
+    // for now, the debug text curr_menu_pointer goes separately
+    event_loop(my_gui, curr_menu_pointer);
 
-    //free_menu_list(sub_menu_list);
     free_debug_text(curr_menu_pointer);
-    free_menu_list(menu_list);
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_FreeSurface(font);
-    SDL_Quit();
+    close_gui(my_gui);
 
-    return EXIT_SUCCESS;
+    return 0;
 }

@@ -129,7 +129,7 @@ void print_menu_list_console(struct ssg_menu_list* list)
    Mouse Left Button has been pressed. renderer points to the
    SDL_Renderer where the buttons are being displayed
  */
-void check_button(struct ssg_menu_list* menu_list,
+int check_button(struct ssg_menu_list* menu_list,
                   struct ssg_menu* menu, int x, int y,
                   SDL_Renderer* renderer)
 {
@@ -137,9 +137,9 @@ void check_button(struct ssg_menu_list* menu_list,
     strncpy(name, menu->name, MENU_NAME_LIMIT);
     name[MENU_NAME_LIMIT - 1] = 0;
     if (are_arrays_equal(name, "Welcome!"))
-        check_pressed_buttons1(menu_list, menu->buttons, x, y,
+        return check_pressed_buttons1(menu_list, menu->buttons, x, y,
                                renderer);
     else if (are_arrays_equal(name, "The Hall"))
-        check_pressed_buttons2(menu_list, menu->buttons, x, y,
+        return check_pressed_buttons2(menu_list, menu->buttons, x, y,
                                renderer);
 }

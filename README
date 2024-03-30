@@ -83,8 +83,16 @@ All of the menus that can be displayed are stored in one single
 ssg_menu_list linked list (for a better understanding, read the header
 files).
 
+The ssg_menu_list represents all the possible forms our GUI will take.
+But this GUI should be displayed somewhere. That's why we're using SDL2.
+Our GUI will have an SDL_Renderer so as an SDL_Window to be displayed. It will
+also take a font, which is an SDL_Surface made from an image. To sum up,
+a GUI needs a window, a renderer, a font (used when printing letters) and
+a list of all the menus it uses. This is the structure ssg_gui declared inside
+the file include/ssg_gui.h, and it will represent all we'll be needing to
+have a working SSG GUI (yeah, the G in SSG already stands for "GUI", nevermind).
 
-The ssg_debug_texts are not stored in any linked list for the moment.
+The ssg_debug_texts are not stored in any linked list for now.
 
 ~~~~~~~~~~~ c) the functions ~~~~~~~~~~~
 
@@ -108,8 +116,8 @@ written in the hall.c file.
 
 Once we've copied all of the ssg_*****.c and .h files, we need a main.c
 file (you might want to just copy the main.c file in the git repo).
-First you need to set up SDL: initiating SDL, creating a window and
-creating a renderer. Then we load the font with IMG_Load().
+To initialize your GUI you use init_gui in src/ssg_gui.c, which only
+takes as parameter the name the window should have.
 
 Now we have to create all of the "objects"/elements with which the
 user will be able to interact and all the linked lists that will store
@@ -126,9 +134,9 @@ you need
 Then you need to enable the menu you want to be displayed at first
 when executing the program. Finally, call the event_loop() function.
 
-Don't forget to free all of the ssg_menu_lists and ssg_debug_texts that
-have been allocated in the heap, so as the window, renderer, font
-surface and also quit SDL.
+Don't forget to close the GUI (close_gui() in ssg_gui.c), which will free
+everything except the ssg_debug_texts, which, for now, need to be freed by hand
+using free_debug_text().
 
 
 ===============================================================

@@ -2,7 +2,6 @@
 #include <pthread.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <err.h>
 #include <time.h>
 
 #include "graphic_utils.h"
@@ -23,7 +22,7 @@
    it handles all the buttons in the second menu instead of the first
    one
  */
-void check_pressed_buttons2(struct ssg_menu_list* menu_list,
+int check_pressed_buttons2(struct ssg_menu_list* menu_list,
                             struct ssg_button_list* list, int x, int y,
                             SDL_Renderer* renderer)
 {
@@ -39,7 +38,11 @@ void check_pressed_buttons2(struct ssg_menu_list* menu_list,
                            button_press_feedback,
                            (void*) button);
         if (e != 0)
-            errx(EXIT_FAILURE, "pthread_create()");
+        {
+            fprintf(stderr, "pthread_create()");
+            return -1;
+        }
+
         pthread_detach(thr);
 
         if (renderer)
@@ -52,7 +55,10 @@ void check_pressed_buttons2(struct ssg_menu_list* menu_list,
 
         if (enable_menu(menu_list, find_menu_name(menu_list,
                                   "Welcome!")))
-            errx(EXIT_FAILURE, "enable_menu()");
+        {
+            fprintf(stderr, "enable_menu()");
+            return -1;
+        }
     }
     if ((button =
          is_button_pressed_from_name(list, "red_button", x, y)))
@@ -64,7 +70,13 @@ void check_pressed_buttons2(struct ssg_menu_list* menu_list,
                            button_press_feedback,
                            (void*) button);
         if (e != 0)
-            errx(EXIT_FAILURE, "pthread_create()");
+        {
+            fprintf(stderr, "pthread_create()");
+            return -1;
+        }
+
         pthread_detach(thr);
     }
+
+    return 0;
 }

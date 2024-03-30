@@ -1,6 +1,9 @@
 #ifndef GRAPHIC_UTILS_H
 #define GRAPHIC_UTILS_H
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 /*
    This file and graphic_utils.c are all helpful functions regarding the
    pixels of the window and their colours

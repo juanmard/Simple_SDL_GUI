@@ -1,6 +1,10 @@
 #ifndef SSG_MENU_LIST_H
 #define SSG_MENU_LIST_H
 
+#include "ssg_menu.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 /*
    An ssg_menu_list is a linked list where each element has a pointer
    to each one of the ssg_menus that shape the program/GUI (so as a
@@ -23,7 +27,7 @@ struct ssg_menu* find_menu_name(struct ssg_menu_list* list,
                                 char* name);
 int enable_menu(struct ssg_menu_list* list, struct ssg_menu* menu);
 void print_menu_list_console(struct ssg_menu_list* list);
-void check_button(struct ssg_menu_list* menu_list,
+int check_button(struct ssg_menu_list* menu_list,
                   struct ssg_menu* menu, int x, int y,
                   SDL_Renderer* renderer);
 
