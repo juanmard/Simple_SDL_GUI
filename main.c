@@ -16,6 +16,11 @@ const int INIT_HEIGHT = 400;
 int main(void)//int argc, char** argv)
 {
     struct ssg_gui *my_gui = init_gui("SSG - Tests");
+    if (!my_gui)
+    {
+        fprintf(stderr, "LOG  : Returning with error code\n");
+        return 1;
+    }
 
     if (set_font(my_gui, "img/font1.png") != 0)
     {

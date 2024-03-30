@@ -15,7 +15,7 @@ struct ssg_gui *init_gui(char *window_name)
             INIT_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window)
     {
-        fprintf(stderr, "ERROR: %s\n", SDL_GetError());
+        fprintf(stderr, "ERROR: SDL_Window: %s\n", SDL_GetError());
         SDL_Quit();
         return NULL;
     }
@@ -24,7 +24,12 @@ struct ssg_gui *init_gui(char *window_name)
             SDL_RENDERER_ACCELERATED);
     if (!renderer)
     {
-        fprintf(stderr, "ERROR: %s\n", SDL_GetError());
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    }
+
+    if (!renderer)
+    {
+        fprintf(stderr, "ERROR: SDL_Renderer: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
         SDL_Quit();
         return NULL;
