@@ -54,6 +54,8 @@ void print_button_list(SDL_Renderer* renderer,
                        SDL_Surface* font);
 struct ssg_button* is_button_pressed_from_name(struct ssg_button_list* list,
                                 char* name, int x, int y);
+struct ssg_text* is_text_pressed_from_name(
+    struct ssg_text_list* list, char* name, int x, int y);
 void print_button_list_console(struct ssg_button_list* list);
 
 // TEXT LIST
@@ -66,6 +68,7 @@ void print_text_list(SDL_Renderer* renderer,
                      struct ssg_text_list* list,
                      SDL_Surface* font);
 void print_text_list_console(struct ssg_text_list* list);
+void set_focused_text(struct ssg_text_list *list, struct ssg_text *text);
 
 // MENU
 struct ssg_menu* new_menu(char* name);

@@ -30,5 +30,8 @@ void print_menu_list_console(struct ssg_menu_list* list);
 int check_button(struct ssg_menu_list* menu_list,
                   struct ssg_menu* menu, int x, int y,
                   SDL_Renderer* renderer);
+int check_text(struct ssg_menu_list* menu_list,
+                  struct ssg_menu* menu, int x, int y,
+                  SDL_Renderer* renderer);
 
 #endif

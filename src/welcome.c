@@ -7,6 +7,7 @@
 #include "ssg_button.h"
 #include "ssg_menu.h"
 #include "ssg_menu_list.h"
+#include "ssg_text.h"
 
 /* This is the .c file for the welcome menu, which has 3 buttons:
    - the pink one prints "Monday left me broken" and enables the
@@ -97,5 +98,18 @@ int check_pressed_buttons1(struct ssg_menu_list* menu_list,
         pthread_detach(thr);
     }
 
+    return 0;
+}
+
+int check_pressed_texts1(struct ssg_menu_list* menu_list,
+                            struct ssg_text_list* list, int x, int y,
+                            SDL_Renderer* renderer)
+{
+    struct ssg_text *text;
+    // "next" to skip sentinel
+    if ((text = is_text_pressed_from_name(list, "textoIntroWelcome", x, y)))
+    {
+        set_focused_text(list, text);
+    }
     return 0;
 }

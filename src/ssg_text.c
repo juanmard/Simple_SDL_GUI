@@ -1,10 +1,12 @@
-#include <stdio.h>
+#include "ssg_text.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #include "graphic_utils.h"
-#include "ssg_text.h"
 
 /*
    print_letter()
@@ -161,7 +163,7 @@ void free_text(struct ssg_text* text)
  */
 struct ssg_text* new_ssg_text(int x, int y, int w, int h,
                               int red, int green, int blue,
-                              char* text)
+                              char* text, char *name)
 {
     struct ssg_text* new_text = malloc(sizeof(struct ssg_text));
     new_text->text = malloc(sizeof(char) * SSG_TEXT_LIMIT);
@@ -174,6 +176,48 @@ struct ssg_text* new_ssg_text(int x, int y, int w, int h,
     new_text->red = red;
     new_text->green = green;
     new_text->blue = blue;
+    new_text->length = strlen(new_text->text);
+
+
+    strncpy(new_text->name, name, TEXT_NAME_LIMIT);
+    new_text->name[TEXT_NAME_LIMIT - 1] = 0;
 
     return new_text;
+}
+
+int add_letter(struct ssg_text *text, char c)
+{
+    size_t len = text->length;
+    if (len == SSG_TEXT_LIMIT - 1)
+    {
+        return -1;
+    }
+
+    text->text[len] = c;
+    text->text[len + 1] = 0;
+
+    text->length++;
+
+    return 0;
+}
+
+int pop_letter(struct ssg_text *text)
+{
+    size_t len = text->length;
+    if (len == 0)
+    {
+        return -1;
+    }
+
+    text->text[len - 1] = 0;
+
+    text->length--;
+
+    return 0;
+}
+
+int is_ssg_text_pressed(struct ssg_text* text, int x, int y)
+{
+    return x>=text->x && x<=text->x+text->w
+        && y>=text->y && y<=text->y+text->h;
 }

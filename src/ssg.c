@@ -18,8 +18,12 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
     while(1)
     {
         SDL_WaitEventTimeout(&event,20);
+        int i = event.key.keysym.sym;
         switch(event.type)
         {
+        case SDL_KEYDOWN:
+            write_to_texts(gui->menu_list->menu, i);
+            break;
         case SDL_QUIT:
             return;
         case SDL_WINDOWEVENT:
@@ -41,12 +45,22 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
                 if(mbl_pushed)
                     break;
                 mbl_pushed = 1;
+                gui->menu_list->menu->texts->text = NULL;
                 int chbt = check_button(gui->menu_list, gui->menu_list->menu,
                              event.button.x, event.button.y,
                              gui->renderer);
                 if (chbt != 0)
                 {
                     fprintf(stderr, "LOG  : breaking after check_button\n");
+                    return;
+                }
+
+                int chtx = check_text(gui->menu_list, gui->menu_list->menu,
+                        event.button.x, event.button.y,
+                        gui->renderer);
+                if (chtx != 0)
+                {
+                    fprintf(stderr, "LOG  : breaking after text_button\n");
                     return;
                 }
             }

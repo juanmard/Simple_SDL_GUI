@@ -77,18 +77,18 @@ button", 0x33, 0x33, 0x33, "black BUTTON");
     // TEXT 1
     struct ssg_text* text1 = new_ssg_text(350, 50, 180, 160,
            0x11, 0xFF, 0x33, "Press this pink button to go to The \
-Hall");
+Hall", "textoIntroWelcome");
 
     // TEXT 2
     struct ssg_text* text2 = new_ssg_text(350, 170, 200, 140,
                                           0x00, 0xBB, 0xFF, "!\"#$%&'(\
 )*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklm\
-nopqrstuvwxyz{|}~");
+nopqrstuvwxyz{|}~", "ascii");
 
     // TEXT 3
     struct ssg_text* text3 = new_ssg_text(3, 10, 70, 50,
                                           0x99, 0x99, 0x99, "Escribe\
- texto aqui");
+ texto aqui", "melapela");
 
     // TEXT LIST 1
     add_text_to_menu(menu1, text1);

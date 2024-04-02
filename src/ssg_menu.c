@@ -102,6 +102,26 @@ struct ssg_button* is_button_pressed_from_name(
 }
 
 /*
+** is_text_pressed_from_name
+*/
+struct ssg_text* is_text_pressed_from_name(
+    struct ssg_text_list* list, char* name, int x, int y)
+{
+    struct ssg_text_list* p = list->next;
+    while (p && !are_arrays_equal(p->text->name, name))
+           p = p->next;
+    if ( !p )
+        return NULL;
+    else
+    {
+        if (is_ssg_text_pressed(p->text, x, y))
+            return p->text;
+        else
+            return NULL;
+    }
+}
+
+/*
    print_button_list_console()
    This function is used for debugging, it prints the ssg_button_list
    pointed to by list on the standard output stream
@@ -161,12 +181,18 @@ void add_text_to_list(struct ssg_text_list* list,
 void free_text_list(struct ssg_text_list* list)
 {
     struct ssg_text_list* p = list;
-    struct ssg_text_list* p2 = list;
+    struct ssg_text_list* p2 = list->next;
+    // freeing only the text_list for the sentinel
+    // because the text itself will be freed later
+    free(p);
+    p = p2;
     while(p)
     {
         p2 = p->next;
         if(p->text)
+        {
             free_text(p->text);
+        }
         free(p);
         p = p2;
     }
@@ -207,6 +233,13 @@ next: %p\n", i, p, p->text, p->next);
         i++;
     }
 }
+
+void set_focused_text(struct ssg_text_list *list, struct ssg_text *text)
+{
+    list->text = text;
+}
+
+
 
 /*
     MENU

@@ -207,7 +207,7 @@ struct ssg_button* new_button_std(int x, int y, char nombre[],
     new_button->tag = new_ssg_text(x+2, y+2, 80-4, 50-4,
                                    new_button->red2,
                                    new_button->green2,
-                                   new_button->blue2, tag);
+                                   new_button->blue2, tag, "dfjdkfj");
     new_button->image = NULL;
     new_button->image_surface = NULL;
     return new_button;
@@ -250,6 +250,6 @@ struct ssg_button* new_button_with_image(int x, int y,
     new_button->image = image_button_texture;
 
     new_button->tag = new_ssg_text(x+2, y+2, 80-4, 50-4, new_button->red2,
-                                   new_button->green2, new_button->blue2, tag);
+                                   new_button->green2, new_button->blue2, tag, "dkfjkdjfk");
     return new_button;
 }
