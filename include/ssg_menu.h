@@ -3,6 +3,9 @@
 
 #define MENU_NAME_LIMIT 15
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 /*
    An ssg_button_list is a linked list, in which each element has two
    fields:
@@ -69,6 +72,7 @@ void print_text_list(SDL_Renderer* renderer,
                      SDL_Surface* font);
 void print_text_list_console(struct ssg_text_list* list);
 void set_focused_text(struct ssg_text_list *list, struct ssg_text *text);
+int write_to_focused_text(struct ssg_text_list *list, SDL_KeyboardEvent key);
 
 // MENU
 struct ssg_menu* new_menu(char* name);

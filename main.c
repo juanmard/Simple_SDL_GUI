@@ -121,7 +121,7 @@ nopqrstuvwxyz{|}~", "ascii");
      */
     struct ssg_debug_text* curr_menu_pointer =
         new_ssg_debug_text(490, 0, 150, 16, 0xFF, 0xFF, 0xFF, pointer,
-                           &my_gui->menu_list->menu->name);
+                           &(my_gui->menu_list->menu->name));
 
     enable_menu(my_gui->menu_list, menu1);
     print_background(my_gui->renderer);

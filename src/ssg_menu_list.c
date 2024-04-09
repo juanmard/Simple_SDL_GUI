@@ -130,49 +130,38 @@ void print_menu_list_console(struct ssg_menu_list* list)
    Mouse Left Button has been pressed. renderer points to the
    SDL_Renderer where the buttons are being displayed
  */
-int check_button(struct ssg_menu_list* menu_list,
-                  struct ssg_menu* menu, int x, int y,
-                  SDL_Renderer* renderer)
+int check_button(struct ssg_menu_list* menu_list, struct ssg_menu* menu, int x,
+                 int y, SDL_Renderer* renderer)
 {
     char name[MENU_NAME_LIMIT];
     strncpy(name, menu->name, MENU_NAME_LIMIT);
     name[MENU_NAME_LIMIT - 1] = 0;
+
     if (are_arrays_equal(name, "Welcome!"))
-        return check_pressed_buttons1(menu_list, menu->buttons, x, y,
-                               renderer);
+    {
+        return check_pressed_buttons1(menu_list, menu->buttons, x, y, renderer);
+    }
+
     else if (are_arrays_equal(name, "The Hall"))
-        return check_pressed_buttons2(menu_list, menu->buttons, x, y,
-                               renderer);
+    {
+        return check_pressed_buttons2(menu_list, menu->buttons, x, y, renderer);
+    }
 }
 
-int check_text(struct ssg_menu_list* menu_list,
-                  struct ssg_menu* menu, int x, int y,
-                  SDL_Renderer* renderer)
+int check_text(struct ssg_menu_list* menu_list, struct ssg_menu* menu, int x,
+               int y, SDL_Renderer* renderer)
 {
     char name[MENU_NAME_LIMIT];
     strncpy(name, menu->name, MENU_NAME_LIMIT);
     name[MENU_NAME_LIMIT - 1] = 0;
+
     if (are_arrays_equal(name, "Welcome!"))
-        return check_pressed_texts1(menu_list, menu->texts, x, y,
-                               renderer);
+    {
+        return check_pressed_texts1(menu_list, menu->texts, x, y, renderer);
+    }
+
     else if (are_arrays_equal(name, "The Hall"))
+    {
         return 0;
-}
-
-int write_to_texts(struct ssg_menu *menu, int c)
-{
-    struct ssg_text *text = menu->texts->text;
-    if (!text)
-    {
-        return -1;
     }
-    if (c >= 32 && c <= 126)
-    {
-        add_letter(text, c);
-    }
-    if (c == 8)
-    {
-        pop_letter(text);
-    }
-    return 0;
 }

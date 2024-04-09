@@ -18,11 +18,11 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
     while(1)
     {
         SDL_WaitEventTimeout(&event,20);
-        int i = event.key.keysym.sym;
+        SDL_KeyboardEvent key_pressed = event.key;
         switch(event.type)
         {
         case SDL_KEYDOWN:
-            write_to_texts(gui->menu_list->menu, i);
+            write_to_focused_text(gui->menu_list->menu->texts, key_pressed);
             break;
         case SDL_QUIT:
             return;

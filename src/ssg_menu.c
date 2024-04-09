@@ -239,7 +239,40 @@ void set_focused_text(struct ssg_text_list *list, struct ssg_text *text)
     list->text = text;
 }
 
-
+int write_to_focused_text(struct ssg_text_list *list, SDL_KeyboardEvent key)
+{
+    //int c = key.keysym.sym;
+    SDL_Scancode s = key.keysym.scancode;
+    int c = SDL_GetKeyFromScancode(s);
+    int mod = key.keysym.mod;
+    struct ssg_text *text = list->text;
+    if (!text)
+    {
+        return -1;
+    }
+    //printf("%d\n", SDL_GetKeyFromScancode(c));
+    //add_letter(text, SDL_GetKeyFromScancode(c));
+    if (c >= 'a' && c <= 'z')
+    {
+        if (mod & KMOD_SHIFT)
+        {
+            add_letter(text, c - 'a' + 'A');
+        }
+        else
+        {
+            add_letter(text, c);
+        }
+    }
+    else if (c >= 32 && c <= 126)
+    {
+        add_letter(text, c);
+    }
+    else if (c == 8)
+    {
+        pop_letter(text);
+    }
+    return 0;
+}
 
 /*
     MENU
