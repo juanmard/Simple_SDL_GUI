@@ -48,6 +48,9 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
                 before = now;
             }
             break;
+        case SDL_KEYUP:
+            last_char = 0;
+            break;
         case SDL_KEYDOWN:
             now = SDL_GetTicks();
             curr_char = key_pressed.keysym.sym;
