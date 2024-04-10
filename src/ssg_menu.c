@@ -239,6 +239,18 @@ void set_focused_text(struct ssg_text_list *list, struct ssg_text *text)
     list->text = text;
 }
 
+int write_to_focused_text_input(struct ssg_text_list *list,
+                                SDL_TextInputEvent input)
+{
+    struct ssg_text *text = list->text;
+    if (!text)
+    {
+        return -1;
+    }
+
+    add_letter(text, input.text[0]);
+}
+
 int write_to_focused_text(struct ssg_text_list *list, SDL_KeyboardEvent key)
 {
     //int c = key.keysym.sym;

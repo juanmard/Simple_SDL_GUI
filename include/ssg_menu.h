@@ -73,6 +73,8 @@ void print_text_list(SDL_Renderer* renderer,
 void print_text_list_console(struct ssg_text_list* list);
 void set_focused_text(struct ssg_text_list *list, struct ssg_text *text);
 int write_to_focused_text(struct ssg_text_list *list, SDL_KeyboardEvent key);
+int write_to_focused_text_input(struct ssg_text_list *list,
+                                SDL_TextInputEvent input);
 
 // MENU
 struct ssg_menu* new_menu(char* name);

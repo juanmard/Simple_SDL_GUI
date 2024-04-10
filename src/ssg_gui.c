@@ -11,6 +11,8 @@ struct ssg_gui *init_gui(char *window_name)
         return NULL;
     }
 
+    SDL_StartTextInput();
+
     SDL_Window* window = SDL_CreateWindow(window_name, 0, 0, INIT_WIDTH,
             INIT_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window)
@@ -80,6 +82,7 @@ void close_gui(struct ssg_gui *gui)
 {
         SDL_DestroyRenderer(gui->renderer);
         SDL_DestroyWindow(gui->window);
+        SDL_StopTextInput();
         SDL_Quit();
         if (gui->font)
         {

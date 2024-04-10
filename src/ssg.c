@@ -15,14 +15,48 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
     SDL_Event event;
     event.type = SDL_WINDOWEVENT;
     int mbl_pushed = 0;
+    /*
+    SDL_version my_version;
+    SDL_GetVersion(&my_version);
+    printf("%hhu.%hhu.%hhu\n", my_version.major, my_version.minor,
+           my_version.patch);
+    */
+    unsigned int before = SDL_GetTicks();
+    unsigned int now;
+    char last_char = 'a';
+    char curr_char;
     while(1)
     {
         SDL_WaitEventTimeout(&event,20);
         SDL_KeyboardEvent key_pressed = event.key;
+        SDL_TextInputEvent input = event.text;
+        SDL_TextEditingEvent edit = event.edit;
         switch(event.type)
         {
+        /*
+        case SDL_TEXTEDITING:
+            printf("Edit: %s\n", edit.text);
+            break;
+        */
+        case SDL_TEXTINPUT:
+            now = SDL_GetTicks();
+            curr_char = input.text[0];
+            if (last_char != curr_char || now - before > 300)
+            {
+                write_to_focused_text_input(gui->menu_list->menu->texts, input);
+                last_char = curr_char;
+                before = now;
+            }
+            break;
         case SDL_KEYDOWN:
-            write_to_focused_text(gui->menu_list->menu->texts, key_pressed);
+            now = SDL_GetTicks();
+            curr_char = key_pressed.keysym.sym;
+            if (curr_char == 8 && now - before > 75)
+            {
+                write_to_focused_text(gui->menu_list->menu->texts, key_pressed);
+                last_char = curr_char;
+                before = now;
+            }
             break;
         case SDL_QUIT:
             return;
