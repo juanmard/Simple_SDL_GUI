@@ -281,7 +281,14 @@ int write_to_focused_text(struct ssg_text_list *list, SDL_KeyboardEvent key)
     }
     else if (c == 8)
     {
-        pop_letter(text);
+        if (mod & KMOD_CTRL)
+        {
+            pop_word(text);
+        }
+        else
+        {
+            pop_letter(text);
+        }
     }
     return 0;
 }

@@ -216,6 +216,25 @@ int pop_letter(struct ssg_text *text)
     return 0;
 }
 
+int pop_word(struct ssg_text *text)
+{
+    if (text->length == 0)
+    {
+        return -1;
+    }
+
+    do
+    {
+        int p = pop_letter(text);
+        if (p == -1 || text->length == 0)
+        {
+            break;
+        }
+    } while (text->text[text->length - 1] != ' ');
+
+    return 0;
+}
+
 int is_ssg_text_pressed(struct ssg_text* text, int x, int y)
 {
     return x>=text->x && x<=text->x+text->w
