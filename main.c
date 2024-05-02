@@ -128,6 +128,15 @@ nopqrstuvwxyz{|}~", "ascii");
     draw(my_gui);
 
 
+    // Test Components:
+    SSGComponent component_1;
+    init_component (&component_1);
+    SSGComponents list_1;
+    list_1.component = &component_1;
+    list_1.next == NULL;
+    my_gui->components = &list_1;
+    // Test components - end
+
     // for now, the debug text curr_menu_pointer goes separately
     event_loop(my_gui, curr_menu_pointer);
 

@@ -91,3 +91,10 @@ void close_gui(struct ssg_gui *gui)
         free_menu_list(gui->menu_list);
         free(gui);
 }
+
+void print_components (struct ssg_gui *gui){
+    if (gui->components != NULL){
+        SSGComponent* test = gui->components->component;
+        (test->draw)(gui->renderer,test);
+    }
+};
