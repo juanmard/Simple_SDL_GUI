@@ -144,6 +144,8 @@ using free_debug_text().
 ===============================================================
 
 If you want to compile this code you'll need SDL2 and SDL2_image.
+# sudo apt install sdl2 sdl2-image
+# sudo apt install build-essential
 
 To compile it you have to execute
 
