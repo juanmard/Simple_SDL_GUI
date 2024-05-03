@@ -95,6 +95,13 @@ void close_gui(struct ssg_gui *gui)
 void print_components (struct ssg_gui *gui){
     if (gui->components != NULL){
         SSGComponent* test = gui->components->component;
-        (test->draw)(gui->renderer,test);
+        (test->draw)(gui->renderer, test);
+    }
+};
+
+void update_components (struct ssg_gui *gui, SDL_Event *event){
+    if (gui->components != NULL){
+        SSGComponent* test = gui->components->component;
+        (test->update)(event, test);
     }
 };

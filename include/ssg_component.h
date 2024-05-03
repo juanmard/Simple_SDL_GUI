@@ -13,7 +13,7 @@ typedef struct ssg_component SSGComponent;
 
 // Definition of interface;
 typedef void (*ptr_draw)   (SDL_Renderer *, SSGComponent *);
-typedef void (*ptr_update) (void);
+typedef void (*ptr_update) (SDL_Event *, SSGComponent  *);
 
 /*
    A "ssg_component" is a basic object which has a position (x,y),
@@ -30,9 +30,10 @@ struct ssg_component
     ptr_update update;
 };
 
-SSGComponent*  init_component  (SSGComponent* component);
-SSGComponent*  new_component   (void);
-void           free_component  (SSGComponent* component);
-void           draw_component  (SDL_Renderer *renderer, SSGComponent *component);
+SSGComponent*  init_component   (SSGComponent* component);
+SSGComponent*  new_component    (void);
+void           free_component   (SSGComponent* component);
+void           draw_component   (SDL_Renderer *renderer, SSGComponent *component);
+void           update_component (SDL_Event *event, SSGComponent *component);
 
 #endif

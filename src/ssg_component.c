@@ -14,12 +14,48 @@ void draw_component (SDL_Renderer *renderer, SSGComponent *component){
     SDL_RenderDrawRect (renderer, &marco);
 };
 
+void update_component (SDL_Event *event, SSGComponent *component){
+
+    // Mouse click coords from event handler.
+    SDL_Point mousePosition;
+    mousePosition.x = event->motion.x; 
+    mousePosition.y = event->motion.y;
+
+    // Limits from component.
+    SDL_Rect limits;
+    limits.x = component->pos.x;
+    limits.y = component->pos.y;
+    limits.w = component->size.w;
+    limits.h = component->size.h;
+
+    if (SDL_PointInRect(&mousePosition, &limits)) {
+       switch(event->type)
+        {
+//        case SDL_TEXTEDITING:
+//        case SDL_TEXTINPUT:
+//        case SDL_KEYUP:
+//        case SDL_KEYDOWN:
+//        case SDL_QUIT:
+//        case SDL_WINDOWEVENT:
+//        case SDL_MOUSEMOTION:
+          case SDL_MOUSEBUTTONDOWN:
+            component->color.r = 0xFF;
+            component->color.g = 0x00;
+            break;
+          case SDL_MOUSEBUTTONUP:
+            component->color.r = 0x00;
+            component->color.g = 0xFF;
+            break;
+        }
+    }
+};
+
 SSGComponent*  init_component  (SSGComponent* component){
     component->pos = (Position){250, 260};
     component->size = (Size){100, 15};
     component->color = (Color){0x00, 0xFF, 0x00, 0xFF};
     component->draw = &draw_component;
-    component->update = NULL;
+    component->update = &update_component;
 };
 
 /*
@@ -29,7 +65,5 @@ SSGComponent* new_component () {
     SSGComponent* new = malloc(sizeof(SSGComponent));
     return new;
 }
-
-
 
 void free_component (SSGComponent* component){};

@@ -111,6 +111,7 @@ void event_loop(struct ssg_gui *gui, struct ssg_debug_text* curr_menu_pointer)
         print_background(gui->renderer);
         print_menu(gui->renderer, gui->menu_list->menu, gui->font);
         //print_menu(renderer, sub_menu_list->menu, font);
+        update_components (gui, &event);
         print_components (gui);
         update_menu_name_pointer(curr_menu_pointer, gui->menu_list);
         print_ssg_debug_text(gui->renderer, curr_menu_pointer, gui->font);

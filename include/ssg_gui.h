@@ -19,7 +19,8 @@ struct ssg_gui
 struct ssg_gui *init_gui(char *window_name);
 int  set_font(struct ssg_gui *gui, char *filename);
 //TODO: void set_components (struct ssg_gui *gui, SSGComponents *components);
-void print_components (struct ssg_gui *gui);
+void print_components  (struct ssg_gui *gui);
+void update_components (struct ssg_gui *gui, SDL_Event *event);
 void close_gui(struct ssg_gui *gui);
 
 #endif /* ! SSG_GUI_H */
