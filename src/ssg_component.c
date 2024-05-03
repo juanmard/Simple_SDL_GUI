@@ -14,6 +14,22 @@ void draw_component (SDL_Renderer *renderer, SSGComponent *component){
     SDL_RenderDrawRect (renderer, &marco);
 };
 
+
+void draw_component_test (SDL_Renderer *renderer, SSGComponent *component){
+    SDL_SetRenderDrawColor (renderer,
+                            component->color.r,
+                            component->color.g,
+                            component->color.b,
+                            component->color.a);
+    SDL_Rect marco;
+    marco.x = component->pos.x;
+    marco.y = component->pos.y;
+    marco.w = component->size.w;
+    marco.h = component->size.h;
+    SDL_RenderDrawLine (renderer, marco.x, marco.y, marco.x+marco.w, marco.y+marco.h);
+    SDL_RenderDrawLine (renderer, marco.x+marco.w, marco.y, marco.x, marco.y+marco.h);
+};
+
 void update_component (SDL_Event *event, SSGComponent *component){
 
     // Mouse click coords from event handler.
@@ -39,6 +55,11 @@ void update_component (SDL_Event *event, SSGComponent *component){
 //        case SDL_WINDOWEVENT:
 //        case SDL_MOUSEMOTION:
           case SDL_MOUSEBUTTONDOWN:
+            if (event->button.button == SDL_BUTTON_RIGHT) {
+                component->draw = &draw_component_test;
+            } else {
+                component->draw = &draw_component;
+            }
             component->color.r = 0xFF;
             component->color.g = 0x00;
             break;
