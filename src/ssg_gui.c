@@ -93,15 +93,21 @@ void close_gui(struct ssg_gui *gui)
 }
 
 void print_components (struct ssg_gui *gui){
-    if (gui->components != NULL){
-        SSGComponent* test = gui->components->component;
-        (test->draw)(gui->renderer, test);
+    SSGComponents *node = gui->components;
+    SSGComponent  *component;
+    while (node!=NULL){
+        component = node->component;
+        (component->draw)(gui->renderer, component);
+        node = node->next;
     }
 };
 
 void update_components (struct ssg_gui *gui, SDL_Event *event){
-    if (gui->components != NULL){
-        SSGComponent* test = gui->components->component;
-        (test->update)(event, test);
+    SSGComponents *node = gui->components;
+    SSGComponent  *component;
+    while (node!=NULL){
+        component = node->component;
+        (component->update)(event, component);
+        node = node->next;
     }
 };

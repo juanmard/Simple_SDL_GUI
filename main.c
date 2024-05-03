@@ -134,6 +134,9 @@ nopqrstuvwxyz{|}~", "ascii");
     SSGComponents list_1;
     list_1.component = &component_1;
     list_1.next == NULL;
+    SSGComponent *component_2 = add_component (&list_1);
+    init_component (component_2);
+    component_2->pos.y += 25;
     my_gui->components = &list_1;
     // Test components - end
 

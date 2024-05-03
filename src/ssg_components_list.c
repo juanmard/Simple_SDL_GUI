@@ -19,7 +19,7 @@ struct ssg_components_list* new_components_list()
    Allocates a new "ssg_components_list" too,
    which is a new element in the linked list
  */
-struct ssg_component* add_component (struct ssg_components_list* list)
+SSGComponent* add_component (struct ssg_components_list* list)
 {
     struct ssg_components_list* p = list;
 

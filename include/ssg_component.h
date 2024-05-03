@@ -30,7 +30,7 @@ struct ssg_component
     ptr_update update;
 };
 
-SSGComponent*  init_component   (SSGComponent* component);
+void           init_component   (SSGComponent* component);
 SSGComponent*  new_component    (void);
 void           free_component   (SSGComponent* component);
 void           draw_component   (SDL_Renderer *renderer, SSGComponent *component);
