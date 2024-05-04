@@ -59,21 +59,35 @@ void update_component (SDL_Event*  event, SSGComponent* component){
     limits.h = component->size.h;
 
     if (SDL_PointInRect(&mousePosition, &limits)) {
-       switch(event->type)
+        switch (component->type)
         {
-          case SDL_MOUSEBUTTONDOWN:
-            if (event->button.button == SDL_BUTTON_RIGHT) {
-                component->draw = &draw_component_test;
-            } else {
-                component->draw = &draw_component;
-            }
-            component->color.r = 0xFF;
-            component->color.g = 0x00;
-            break;
-          case SDL_MOUSEBUTTONUP:
-            component->color.r = 0x00;
-            component->color.g = 0xFF;
-            break;
+            case SSG_BASIC:
+                switch(event->type)
+                {
+                    case SDL_MOUSEBUTTONDOWN:
+                        if (event->button.button == SDL_BUTTON_RIGHT) {
+                            component->draw = &draw_component_test;
+                        } else {
+                            component->draw = &draw_component;
+                        }
+                        component->color.r = 0xFF;
+                        component->color.g = 0x00;
+                        break;
+                    
+                    case SDL_MOUSEBUTTONUP:
+                        component->color.r = 0x00;
+                        component->color.g = 0xFF;
+                        break;
+                }
+                break;
+            
+            case SSG_SLIDER:
+                update_slider (event, (SSGSlider*) component->son);
+                break;
+
+            case SSG_BUTTON:
+            default:
+                break;
         }
     }
 };

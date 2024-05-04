@@ -32,11 +32,11 @@ struct ssg_component
     Size     size;
     Color    color;
 
-    TypeComponent type;
-    void* son;
-
     ptr_draw   draw;
     ptr_update update;
+
+    TypeComponent type;
+    void* son;
 };
 
 void           init_component   (SSGComponent* component);
