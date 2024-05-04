@@ -97,7 +97,8 @@ void print_components (struct ssg_gui *gui){
     SSGComponent  *component;
     while (node!=NULL){
         component = node->component;
-        (component->draw)(gui->renderer, component);
+        if (component->draw)
+            (component->draw)(gui->renderer, component);
         node = node->next;
     }
 };
@@ -107,7 +108,8 @@ void update_components (struct ssg_gui *gui, SDL_Event *event){
     SSGComponent  *component;
     while (node!=NULL){
         component = node->component;
-        (component->update)(event, component);
+        if (component->update)
+            (component->update)(event, component);
         node = node->next;
     }
 };

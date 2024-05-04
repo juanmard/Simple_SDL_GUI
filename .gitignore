@@ -1,0 +1,6 @@
+src/*.o
+*.o
+*.json
+main
+
+

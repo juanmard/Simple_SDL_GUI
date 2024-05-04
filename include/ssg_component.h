@@ -12,8 +12,14 @@ typedef struct color {unsigned int r, g, b, a;} Color;
 typedef struct ssg_component SSGComponent;
 
 // Definition of interface;
-typedef void (*ptr_draw)   (SDL_Renderer *, void *);
-typedef void (*ptr_update) (SDL_Event *,  void  *);
+typedef void (*ptr_draw)   (SDL_Renderer*, SSGComponent*);
+typedef void (*ptr_update) (SDL_Event*, SSGComponent*);
+
+typedef enum {
+    SSG_BASIC = 0,
+    SSG_SLIDER,
+    SSG_BUTTON
+} TypeComponent;
 
 /*
    A "ssg_component" is a basic object which has a position (x,y),
@@ -26,14 +32,17 @@ struct ssg_component
     Size     size;
     Color    color;
 
+    TypeComponent type;
+    void* son;
+
     ptr_draw   draw;
     ptr_update update;
 };
 
 void           init_component   (SSGComponent* component);
-SSGComponent*  new_component    (void);
+SSGComponent*  new_component    ();
 void           free_component   (SSGComponent* component);
-void           draw_component   (SDL_Renderer *renderer, SSGComponent *component);
-void           update_component (SDL_Event *event, SSGComponent *component);
+void           draw_component   (SDL_Renderer* renderer, SSGComponent* component);
+void           update_component (SDL_Event* event, SSGComponent* component);
 
 #endif
