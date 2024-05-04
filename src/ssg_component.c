@@ -56,9 +56,9 @@ void update_component (SDL_Event *event, SSGComponent *component){
 //        case SDL_MOUSEMOTION:
           case SDL_MOUSEBUTTONDOWN:
             if (event->button.button == SDL_BUTTON_RIGHT) {
-                component->draw = &draw_component_test;
+                component->draw = (void*) &draw_component_test;
             } else {
-                component->draw = &draw_component;
+                component->draw = (void*) &draw_component;
             }
             component->color.r = 0xFF;
             component->color.g = 0x00;
@@ -71,12 +71,17 @@ void update_component (SDL_Event *event, SSGComponent *component){
     }
 };
 
+
+/*
+    init_component ()
+    For a basic initialization test.
+*/
 void init_component  (SSGComponent* component){
     component->pos = (Position){250, 260};
     component->size = (Size){100, 15};
     component->color = (Color){0x00, 0xFF, 0x00, 0xFF};
-    component->draw = &draw_component;
-    component->update = &update_component;
+    component->draw = (void*) &draw_component;
+    component->update = (void*) &update_component;
 };
 
 /*

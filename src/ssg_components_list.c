@@ -4,9 +4,9 @@
    new_components_list()
    Returns a pointer to a new heap allocated "ssg_components_list".
  */
-struct ssg_components_list* new_components_list()
+SSGComponents* new_components_list()
 {
-    struct ssg_components_list* new = malloc(sizeof(struct ssg_components_list));
+    SSGComponents* new = malloc(sizeof(SSGComponents));
     new->component = NULL;
     new->next = NULL;
     return new;
@@ -19,17 +19,16 @@ struct ssg_components_list* new_components_list()
    Allocates a new "ssg_components_list" too,
    which is a new element in the linked list
  */
-SSGComponent* add_component (struct ssg_components_list* list)
+void add_component (SSGComponents* list, SSGComponent* component)
 {
-    struct ssg_components_list* p = list;
+    SSGComponents* p = list;
 
     // TODO: Check if (p != NULL) before to use it.
     while (p->next)
         p = p->next;
-    p->next = malloc(sizeof(struct ssg_components_list));
-    p->next->component = new_component ();
+    p->next = malloc(sizeof(SSGComponents));
+    p->next->component = component;
     p->next->next = NULL;
-    return p->next->component;
 }
 
 /*
@@ -37,11 +36,11 @@ SSGComponent* add_component (struct ssg_components_list* list)
    Frees the memory region pointed to by list, so as each component in the
    "ssg_components_list".
  */
-void free_components_list (struct ssg_components_list* list)
+void free_components_list (SSGComponents* list)
 {
-    struct ssg_components_list* p = list;
+    SSGComponents* p = list;
     // TODO: Check if (p != NULL) before to use it.
-    struct ssg_components_list* p2 = list->next;
+    SSGComponents* p2 = list->next;
 
     free (p);
     p = p2;

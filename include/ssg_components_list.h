@@ -17,8 +17,8 @@ struct ssg_components_list
 };
 typedef struct ssg_components_list SSGComponents;
 
-struct ssg_components_list* new_components_list ();
-struct ssg_component*       add_component (struct ssg_components_list *list);
-void                        free_component_list (struct ssg_components_list *list);
+SSGComponents*  new_components_list ();
+void            add_component (SSGComponents* list, SSGComponent* component);
+void            free_components_list (SSGComponents* list);
 
 #endif

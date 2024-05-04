@@ -12,8 +12,8 @@ typedef struct color {unsigned int r, g, b, a;} Color;
 typedef struct ssg_component SSGComponent;
 
 // Definition of interface;
-typedef void (*ptr_draw)   (SDL_Renderer *, SSGComponent *);
-typedef void (*ptr_update) (SDL_Event *, SSGComponent  *);
+typedef void (*ptr_draw)   (SDL_Renderer *, void *);
+typedef void (*ptr_update) (SDL_Event *,  void  *);
 
 /*
    A "ssg_component" is a basic object which has a position (x,y),
@@ -24,7 +24,7 @@ struct ssg_component
 {
     Position pos;
     Size     size;
-    Color     color;
+    Color    color;
 
     ptr_draw   draw;
     ptr_update update;

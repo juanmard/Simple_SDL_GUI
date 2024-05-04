@@ -4,6 +4,7 @@
 #include "graphic_utils.h"
 #include "ssg.h"
 #include "ssg_button.h"
+#include "ssg_slider.h"
 #include "ssg_text.h"
 #include "ssg_menu.h"
 #include "ssg_menu_list.h"
@@ -127,18 +128,24 @@ nopqrstuvwxyz{|}~", "ascii");
     print_background(my_gui->renderer);
     draw(my_gui);
 
-
-    // Test Components:
+    // Test components - begin
     SSGComponent component_1;
     init_component (&component_1);
     SSGComponents list_1;
     list_1.component = &component_1;
-    list_1.next == NULL;
-    SSGComponent *component_2 = add_component (&list_1);
+    list_1.next = NULL;
+    SSGComponent* component_2 = new_component();
     init_component (component_2);
     component_2->pos.y += 25;
+    add_component (&list_1, component_2);
     my_gui->components = &list_1;
     // Test components - end
+
+    // Test slider ->
+    SSGSlider* slider_1 = new_slider();
+    SSGComponent* component_3 = slider_1->dad;
+    add_component (&list_1, component_3);
+    // Test slider <-
 
     // for now, the debug text curr_menu_pointer goes separately
     event_loop(my_gui, curr_menu_pointer);
