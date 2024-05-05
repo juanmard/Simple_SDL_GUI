@@ -19,7 +19,11 @@ void draw_component (SDL_Renderer* renderer, SSGComponent* component){
             break;
         
         case SSG_SLIDER:
-            draw_slider (renderer, (SSGSlider*) component->son);
+//            draw_slider (renderer, (SSGSlider*) component->son);
+            SSGSlider *slider = component->son;
+            if (slider->draw) {
+                (slider->draw) (renderer, (SSGSlider*) slider);
+            }
             break;
 
         case SSG_BUTTON:
