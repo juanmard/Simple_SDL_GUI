@@ -128,30 +128,24 @@ nopqrstuvwxyz{|}~", "ascii");
     print_background(my_gui->renderer);
     draw(my_gui);
 
-    // Test components - begin
-    //SSGComponent* component_1 = new_component();
-    //init_component (component_1);
-    //SSGComponents* list_1 = new_components_list();
-    //add_component (list_1, component_1);
-    //  my_gui->components = list_1;
-    
-    SSGComponent component_1;
-    init_component (&component_1);
+    // Test components - begin    
+    SSGBasic basic_1;
+    init_basic (&basic_1);
     SSGComponents list_1;
-    list_1.component = &component_1;
+    list_1.component = (SSGComponent*)  &basic_1;
     list_1.next = NULL;
     my_gui->components = &list_1;
  
-    SSGComponent* component_2 = new_component();
-    init_component (component_2);
-    component_2->pos.y += 25;
-    add_component (&list_1, component_2);
+    SSGBasic* basic_2 = new_basic();
+    init_basic (basic_2);
+    basic_2->pos.y += 25;
+    add_component (&list_1, (SSGComponent*) basic_2);
     // Test components - end
 
     // Test slider ->
     SSGSlider* slider_1 = new_slider();
     init_slider (slider_1);
-    add_component (&list_1, slider_1->dad);
+    add_component (&list_1, (SSGComponent *) slider_1);
     // Test slider <-
 
     // for now, the debug text curr_menu_pointer goes separately

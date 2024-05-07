@@ -1,24 +1,32 @@
 #ifndef SSG_SLIDER_H
 #define SSG_SLIDER_H
 
-#include "ssg_component.h"
+#include <SDL2/SDL.h>
+#include "ssg_types.h"
 
 typedef struct ssg_slider SSGSlider;
-typedef void (*ptr_draw_slider)(SDL_Renderer*, SSGSlider*);
+//typedef void (*ptr_draw_slider)(SDL_Renderer*, SSGSlider*);
 
 /*
 TODO: Description
  */
 struct ssg_slider
 {
-    SSGComponent* dad;
+    TypeComponent type;
+    ptr_update update;
+    ptr_draw   draw;
+    Position   pos;
+    Size       size;
+    Color      color;
+    void*      dad;
+    void*      son;
 
     int min_value;
     int max_value;
     int value;
     
     // Graphics part.
-    ptr_draw_slider draw;
+    // ptr_draw_slider draw;
 
     // TODO: Convert in Position and Size for not depend of SDL.
     SDL_Rect cursor;

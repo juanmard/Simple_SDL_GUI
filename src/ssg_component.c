@@ -1,11 +1,16 @@
 #include "ssg_component.h"
 
 void draw_component (SDL_Renderer* renderer, SSGComponent* component){
+    if (component->draw){
+        (component->draw)(renderer, component);
+    }
 };
 
 void update_component (SDL_Event*  event, SSGComponent* component){
+    if (component->update){
+        (component->update)(event, component);
+    }
 };
-
 
 /*
     init_component ()
@@ -13,9 +18,8 @@ void update_component (SDL_Event*  event, SSGComponent* component){
 */
 void init_component  (SSGComponent* component){
     component->type = SSG_COMPONENT;
-    // component->draw = &draw_component;
-    // component->update = &update_component;
-    // component->son = NULL;
+    component->update = NULL;
+    component->draw = NULL;
 };
 
 /*
@@ -33,7 +37,7 @@ TODO:
 void free_component (SSGComponent* component){
     // TODO: Check if it has a son.
     //       if (son) free_son (son)...
-    if (component->son == NULL){
+    //if (component->son == NULL){
         free (component);
-    }
+    //}
 };

@@ -2,7 +2,7 @@
 #define SSG_BASIC_H
 
 #include <SDL2/SDL.h>
-#include "ssg_component.h"
+#include "ssg_types.h"
 
 typedef struct ssg_basic SSGBasic;
 
@@ -11,14 +11,13 @@ typedef struct ssg_basic SSGBasic;
 struct ssg_basic
 {
     TypeComponent type;
-    void* dad;
-    void* son;
     ptr_update update;
-    ptr_draw   draw;
-    
+    ptr_draw   draw;    
     Position pos;
     Size     size;
     Color    color;
+    void* dad;
+    void* son;
 };
 
 void           init_basic   (SSGBasic* basic);

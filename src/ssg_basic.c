@@ -58,9 +58,9 @@ void update_basic (SDL_Event* event, SSGBasic* basic){
         {
             case SDL_MOUSEBUTTONDOWN:
                 if (event->button.button == SDL_BUTTON_RIGHT) {
-                    basic->draw = &draw_basic_test;
+                    basic->draw = (PTR_DRAW) &draw_basic_test;
                 } else {
-                    basic->draw = &draw_basic;
+                    basic->draw = (PTR_DRAW) &draw_basic;
                 }
                 basic->color.r = 0xFF;
                 basic->color.g = 0x00;
@@ -80,9 +80,9 @@ void update_basic (SDL_Event* event, SSGBasic* basic){
 /*
    new_basic()
 */
-SSGBasic* new_basic (SSGComponent* component) {
+SSGBasic* new_basic () {
     SSGBasic* new = malloc(sizeof(SSGBasic));
-    new->dad = component;
+    new->dad = NULL;
     new->son = NULL;
     return new;
 }
@@ -95,8 +95,8 @@ void init_basic  (SSGBasic* basic){
     basic->type = SSG_BASIC;
     // basic->dad = ...;
     // basic->son = NULL;
-    basic->update = &update_basic;
-    basic->draw = &draw_basic;
+    basic->update = (PTR_UPDATE) &update_basic;
+    basic->draw = (PTR_DRAW) &draw_basic;
 
     basic->pos = (Position){250, 260};
     basic->size = (Size){100, 15};
@@ -109,7 +109,7 @@ TODO:
 void free_basic (SSGBasic* basic){
     if (basic->son == NULL) {
         // Break the link with his father and then...
-        basic->dad->son = NULL;
+        basic->son = NULL;
         // ...be free.
         free (basic);
     }
