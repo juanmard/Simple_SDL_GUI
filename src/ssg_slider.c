@@ -18,14 +18,10 @@ SSGSlider* new_slider () {
 };
 
 void init_slider (SSGSlider* slider){
-    //SSGComponent* new_dad = new_component ();
-    //init_component(new_dad);
-    //new_dad->son = slider;
     slider->type = SSG_SLIDER;
     slider->pos = (Position) {250,320};
     slider->size = (Size) {200,30};
     slider->color = (Color) {0x00, 0x00, 0xFF ,0xFF};
-    //slider->dad = new_dad;
 
     // Init draw function.
     slider->draw = (PTR_DRAW) &draw_slider;
@@ -34,7 +30,7 @@ void init_slider (SSGSlider* slider){
     // Test...
     slider->min_value = 0;
     slider->max_value = 100;
-    slider->value = 70;
+    slider->value = 10;
 
     // Other...
     slider->moving = SDL_FALSE;
@@ -50,7 +46,7 @@ void init_slider (SSGSlider* slider){
 TODO: Description and implementation.
 */
 void free_slider (SSGSlider* slider){
-
+    free (slider);
 };
 
 /*
@@ -97,53 +93,65 @@ void update_slider (SDL_Event* event, SSGSlider* slider){
     mousePosition.x = event->motion.x; 
     mousePosition.y = event->motion.y;
 
-    // Update "value" if  moving cursor.
-    if (slider->moving) {
-        float scale = (float) (slider->max_value - slider->min_value) / (float)  slider->size.w;
-        slider->value += scale * (mousePosition.x - slider->set.x);
-        slider->set = mousePosition;
-    }
+    // Limits from basic component.
+    SDL_Rect limits;
+    limits.x = slider->pos.x;
+    limits.y = slider->pos.y;
+    limits.w = slider->size.w;
+    limits.h = slider->size.h;
 
-    // Update cursor position.
-    // TODO: in "change_value ()" get a "change" bool for recalculate.
-    //       if (change_value) { recalculate_cursor };
-    recalculate_cursor_position (slider);
+    // If the event is on slider...
+    // TODO: A boolean saying "no filter" and receive all events.
+    if (SDL_PointInRect(&mousePosition, &limits)) {
+        // Update "value" if  moving cursor.
+        if (slider->moving) {
+            float scale = (float) (slider->max_value - slider->min_value) / (float)  slider->size.w;
+            slider->value += scale * (mousePosition.x - slider->set.x);
+            slider->set = mousePosition;
+            //slider->cursor.x = mousePosition.x;
+        }
 
-    // Update with event.
-    switch(event->type)
-    {
-        case SDL_MOUSEBUTTONDOWN:
-            if (SDL_PointInRect(&mousePosition, &(slider->cursor)) &
-                 (slider->moving == SDL_FALSE) )
-            {
-                slider->moving = SDL_TRUE;
-                slider->set = mousePosition;
-            }
+        // Update cursor position.
+        // TODO: in "change_value ()" get a "change" bool for recalculate.
+        //       if (change_value) { recalculate_cursor };
+        recalculate_cursor_position (slider);
 
-            // TODO: Create slider->inc_value() and check max_value on it.
-            if (event->button.button == SDL_BUTTON_LEFT) {
-                if (mousePosition.x > slider->cursor.x){
-                    if ((slider->value++) > (slider->max_value)) slider->value = slider->max_value;
-                } else {
-                    if ((slider->value--) < (slider->min_value)) slider->value = slider->min_value;
+        // Update with event.
+        switch(event->type)
+        {
+            case SDL_MOUSEBUTTONDOWN:
+                if (SDL_PointInRect(&mousePosition, &(slider->cursor)) &
+                    (slider->moving == SDL_FALSE) )
+                {
+                    slider->moving = SDL_TRUE;
+                    slider->set = mousePosition;
                 }
-            }
-            
-            // Change draw function.
-            if (event->button.button == SDL_BUTTON_MIDDLE) {
-                if (slider->draw == (PTR_DRAW) &draw_slider) {
-                    slider->draw = (PTR_DRAW) &draw_slider_v2;
-                } else {
-                    slider->draw = (PTR_DRAW) &draw_slider;
+
+                // TODO: Create slider->inc_value() and check max_value on it.
+                if (event->button.button == SDL_BUTTON_LEFT) {
+                    if (mousePosition.x > slider->cursor.x){
+                        if ((slider->value++) > (slider->max_value)) slider->value = slider->max_value;
+                    } else {
+                        if ((slider->value--) < (slider->min_value)) slider->value = slider->min_value;
+                    }
                 }
-            }
-            break;
+                
+                // Change draw function.
+                if (event->button.button == SDL_BUTTON_MIDDLE) {
+                    if (slider->draw == (PTR_DRAW) &draw_slider) {
+                        slider->draw = (PTR_DRAW) &draw_slider_v2;
+                    } else {
+                        slider->draw = (PTR_DRAW) &draw_slider;
+                    }
+                }
+                break;
 
-        case SDL_MOUSEBUTTONUP:
-            slider->moving = SDL_FALSE;
-            break;
+            case SDL_MOUSEBUTTONUP:
+                slider->moving = SDL_FALSE;
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 };
