@@ -5,6 +5,8 @@
 #include "ssg_types.h"
 #include "ssg_basic.h"
 #include "ssg_slider.h"
+#include "ssg_label.h"
+#include "ssg_dbgcomponent.h"
 
 //TODO: Change in code all structs definitions for typedef.
 typedef union ssg_component SSGComponent;
@@ -21,6 +23,8 @@ union ssg_component
     };
     SSGBasic   basic;
     SSGSlider  slider;
+    SSGLabel   label;
+    SSGDbgcomponent  dbgcomponent;
 };
 
 void           init_component   (SSGComponent* component);

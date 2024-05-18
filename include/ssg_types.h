@@ -16,6 +16,12 @@ typedef enum {
     SSG_BUTTON
 } TypeComponent;
 
+typedef enum {
+    false = 0,
+    true =1
+} SSG_bool;
+
+
 typedef union ssg_component SSGComponent;
 
 // Definition of interface;

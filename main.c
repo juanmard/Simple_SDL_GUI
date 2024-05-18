@@ -6,6 +6,7 @@
 #include "ssg_button.h"
 #include "ssg_slider.h"
 #include "ssg_label.h"
+#include "ssg_dbgcomponent.h"
 #include "ssg_text.h"
 #include "ssg_menu.h"
 #include "ssg_menu_list.h"
@@ -154,6 +155,13 @@ nopqrstuvwxyz{|}~", "ascii");
     init_label (label_1);
     add_component (&list_1, (SSGComponent *) label_1);
     // Test label <-
+
+    // Test dbgcomponent ->
+    SSGDbgcomponent* dbgcomponent_1 = new_dbgcomponent();
+    init_dbgcomponent (dbgcomponent_1);
+    dbgcomponent_1->pos.y += 50;
+    add_component (&list_1, (SSGComponent *) dbgcomponent_1);
+    // Test dbgcomponent <-
 
     // for now, the debug text curr_menu_pointer goes separately
     event_loop(my_gui, curr_menu_pointer);
