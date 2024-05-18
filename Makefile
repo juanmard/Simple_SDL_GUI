@@ -10,6 +10,7 @@ LDLIBS = `pkg-config --libs sdl2 SDL2_image` -fsanitize=address
 SRC = main.c \
 	  src/ssg_basic.c \
 	  src/ssg_slider.c \
+	  src/ssg_label.c \
 	  src/ssg_component.c \
 	  src/ssg_components_list.c \
 	  src/ssg_button.c src/ssg_text.c src/graphic_utils.c \

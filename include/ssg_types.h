@@ -12,6 +12,7 @@ typedef enum {
     SSG_COMPONENT = 0,
     SSG_BASIC,
     SSG_SLIDER,
+    SSG_LABEL,
     SSG_BUTTON
 } TypeComponent;
 
