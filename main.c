@@ -5,6 +5,7 @@
 #include "ssg.h"
 #include "ssg_button.h"
 #include "ssg_slider.h"
+#include "ssg_label.h"
 #include "ssg_text.h"
 #include "ssg_menu.h"
 #include "ssg_menu_list.h"
@@ -147,6 +148,12 @@ nopqrstuvwxyz{|}~", "ascii");
     init_slider (slider_1);
     add_component (&list_1, (SSGComponent *) slider_1);
     // Test slider <-
+
+    // Test label ->
+    SSGLabel* label_1 = new_label();
+    init_label (label_1);
+    add_component (&list_1, (SSGComponent *) label_1);
+    // Test label <-
 
     // for now, the debug text curr_menu_pointer goes separately
     event_loop(my_gui, curr_menu_pointer);
