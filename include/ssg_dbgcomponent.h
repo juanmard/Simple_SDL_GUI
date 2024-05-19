@@ -20,7 +20,7 @@ struct ssg_dbgcomponent
     void* son;
 
     SSG_bool moving;
-    Position point;
+    Position offset;
 };
 
 void                init_dbgcomponent   (SSGDbgcomponent* dbgcomponent);

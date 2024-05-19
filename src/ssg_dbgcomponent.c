@@ -43,7 +43,7 @@ void draw_dbgcomponent_test (SDL_Renderer* renderer, SSGDbgcomponent* dbgcompone
 /*
 TODO: 
 */
-void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* dbgcomponent){
+void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this){
 
     // Mouse click coords from event handler.
     SDL_Point mousePosition;
@@ -51,53 +51,59 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* dbgcomponent){
     mousePosition.y = event->motion.y;
 
     //  Moving with cursor.
-    if (dbgcomponent->moving) {
-        dbgcomponent->pos.x = mousePosition.x;
-        dbgcomponent->pos.y = mousePosition.y;
+    if (event->type == SDL_MOUSEMOTION){
+        SDL_MouseMotionEvent* eMouse = &(event->motion);
+        if (this->moving) {
+            this->pos.x = eMouse->x - this->offset.x;
+            this->pos.y = eMouse->y - this->offset.y;
+        }
     }
 
-    // Limits from dbgcomponent component.
+    // Limits from this component.
     SDL_Rect limits;
-    limits.x = dbgcomponent->pos.x;
-    limits.y = dbgcomponent->pos.y;
-    limits.w = dbgcomponent->size.w;
-    limits.h = dbgcomponent->size.h;
-
+    limits.x = this->pos.x;
+    limits.y = this->pos.y;
+    limits.w = this->size.w;
+    limits.h = this->size.h;
     if (SDL_PointInRect(&mousePosition, &limits)) {
         switch(event->type)
         {
             case SDL_MOUSEBUTTONDOWN:
-                // Change draw function of  dbgcomponent component.
-                if (event->button.button == SDL_BUTTON_MIDDLE) {
-                    if (dbgcomponent->draw == (PTR_DRAW) &draw_dbgcomponent) {
-                        dbgcomponent->draw = (PTR_DRAW) &draw_dbgcomponent_test;
+                SDL_MouseButtonEvent* eMButton = &(event->button);
+                // Change draw function of  this component.
+                if (eMButton->button == SDL_BUTTON_MIDDLE) {
+                    if (this->draw == (PTR_DRAW) &draw_dbgcomponent) {
+                        this->draw = (PTR_DRAW) &draw_dbgcomponent_test;
                     } else {
-                        dbgcomponent->draw = (PTR_DRAW) &draw_dbgcomponent;
+                        this->draw = (PTR_DRAW) &draw_dbgcomponent;
                     }
                 }
 
                 // Check moving behaviour.
-                if (event->button.button == SDL_BUTTON_LEFT) {
-                    dbgcomponent->moving = true;
-                    dbgcomponent->point = (Position){mousePosition.x, mousePosition.y};
-                    dbgcomponent->color.a = 180;
+                if (eMButton->button  == SDL_BUTTON_LEFT) {
+                    this->moving = true;
+                    this->offset = (Position){eMButton->x - this->pos.x, eMButton->y - this->pos.y};
+                    this->color.a = 180;
                 }
 
                 // Change the color.
-                dbgcomponent->color.r = 0xFF;
-                dbgcomponent->color.g = 0x00;
+                this->color.r = 0xFF;
+                this->color.g = 0x00;
                 break;
             
             case SDL_MOUSEBUTTONUP:
-                // Release and drop the dbgcomponent component.
-                dbgcomponent->moving = false;
-                dbgcomponent->color.a = 0xFF;
+                // Release and drop the this component.
+                this->moving = false;
+                this->color.a = 0xFF;
 
                 // Change color.
-                dbgcomponent->color.r = 0x00;
-                dbgcomponent->color.g = 0xFF;
+                this->color.r = 0x00;
+                this->color.g = 0xFF;
                 break;
             
+            case SDL_MOUSEMOTION:
+                    break;
+
             default:
                 break;
         }
@@ -130,6 +136,7 @@ void init_dbgcomponent  (SSGDbgcomponent* dbgcomponent){
     dbgcomponent->color = (Color) {0x00, 0x00, 0xFF, 0xFF};
 
     dbgcomponent->moving = false;
+    dbgcomponent->offset = (Position) {0,0};
 };
 
 /*
