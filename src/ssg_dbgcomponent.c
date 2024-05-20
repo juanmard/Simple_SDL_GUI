@@ -53,6 +53,7 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
     //  Moving with cursor.
     if (event->type == SDL_MOUSEMOTION){
         SDL_MouseMotionEvent* eMouse = &(event->motion);
+        // Change component.
         if (this->moving) {
             this->pos.x = eMouse->x - this->offset.x;
             this->pos.y = eMouse->y - this->offset.y;
@@ -84,12 +85,13 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 
                 // Check moving and sizing behaviour.
                 if (eMButton->button  == SDL_BUTTON_LEFT) {
-                    if (eMButton->x > (this->pos.x + this->size.w-2)) {
+                    if (eMButton->x > (this->pos.x + this->size.w-20)) {
                         this->sizing = true;
                         this->color.g = 128;
                     } else {
                         this->moving = true;
                         this->color.r = 128;
+                        SDL_SetCursor(this->mov_cursor);
                     }
                     this->offset = (Position){eMButton->x - this->pos.x, eMButton->y - this->pos.y};
                 }
@@ -104,6 +106,7 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
                 this->moving = false;
                 this->sizing = false;
                 this->color.a = 0xFF;
+                SDL_SetCursor(this->nor_cursor);
 
                 // Change color.
                 this->color.r = 0x00;
@@ -111,7 +114,15 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
                 break;
             
             case SDL_MOUSEMOTION:
-                    break;
+                // Change cursor.
+                SDL_MouseMotionEvent *eMouse = &(event->motion);
+                if ((eMouse->x > (this->pos.x + this->size.w-20)) & \
+                (eMouse->x < (this->pos.x + this->size.w)))  {
+                    SDL_SetCursor(this->siz_cursor);
+                } else {
+                    SDL_SetCursor(this->nor_cursor);
+                }
+                break;
 
             default:
                 break;
@@ -124,8 +135,6 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 */
 SSGDbgcomponent* new_dbgcomponent () {
     SSGDbgcomponent* new = malloc(sizeof(SSGDbgcomponent));
-    new->dad = NULL;
-    new->son = NULL;
     return new;
 }
 
@@ -147,17 +156,16 @@ void init_dbgcomponent  (SSGDbgcomponent* this){
     this->moving = false;
     this->sizing = false;
     this->offset = (Position) {0,0};
+
+    // TODO: Move another global place for all components.
+    this->nor_cursor = SDL_GetCursor();
+    this->mov_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+    this->siz_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
 };
 
 /*
 TODO: 
 */
-void free_dbgcomponent (SSGDbgcomponent* this){
-    if (this->son == NULL) {
-        // Break the link with his father and then...
-        this->son = NULL;
-        // ...be free.
+void free_dbgcomponent (SSGDbgcomponent* this) {
         free (this);
-    }
-    // TODO: ...else {free first his own son}.
 };

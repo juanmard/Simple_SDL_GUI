@@ -16,18 +16,22 @@ struct ssg_dbgcomponent
     Position pos;
     Size     size;
     Color    color;
-    void* dad;
-    void* son;
 
     SSG_bool moving;
     SSG_bool sizing;
     Position offset;
+
+    
+    // TODO: Move in another place for ann access from all components.
+    SDL_Cursor* nor_cursor;
+    SDL_Cursor* mov_cursor;
+    SDL_Cursor* siz_cursor;
 };
 
-void                init_dbgcomponent   (SSGDbgcomponent* dbgcomponent);
+void                init_dbgcomponent   (SSGDbgcomponent* this);
 SSGDbgcomponent*    new_dbgcomponent    ();
-void                free_dbgcomponent   (SSGDbgcomponent* dbgcomponent);
-void                draw_dbgcomponent   (SDL_Renderer* renderer, SSGDbgcomponent* dbgcomponent);
-void                update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* dbgcomponent);
+void                free_dbgcomponent   (SSGDbgcomponent* this);
+void                draw_dbgcomponent   (SDL_Renderer* renderer, SSGDbgcomponent* this);
+void                update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this);
 
 #endif
