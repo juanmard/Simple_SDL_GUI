@@ -19,6 +19,7 @@ void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* this){
     bounds.h = this->size.h;
 
     SDL_RenderDrawRect (renderer, &bounds);
+    this->renderer = renderer;
 };
 
 
@@ -50,6 +51,9 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
     mousePosition.x = event->motion.x; 
     mousePosition.y = event->motion.y;
 
+    // Limits.
+    SDL_Rect limits;
+
     //  Moving with cursor.
     if (event->type == SDL_MOUSEMOTION){
         SDL_MouseMotionEvent* eMouse = &(event->motion);
@@ -64,23 +68,34 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 
         // Change cursor.
         // TODO: A function that get this check position.
-        int posx_check = this->pos.x + this->size.w;
-        int posy_check = this->pos.y + this->size.h;
-        SSG_bool size_w = (eMouse->x > (posx_check - SSG_GAP)) & (eMouse->x < posx_check);
-        SSG_bool size_h = (eMouse->y > (posy_check - SSG_GAP)) & (eMouse->y < posy_check);
+        mousePosition.x = eMouse->x;
+        mousePosition.y = eMouse->y;
+        limits.x = this->pos.x + this->size.w - SSG_GAP;
+        limits.y = this->pos.y;
+        limits.w = SSG_GAP;
+        limits.h = this->size.h;
+        SDL_bool size_w = SDL_PointInRect(&mousePosition, &limits);
+        SDL_RenderDrawRect (this->renderer, &limits);
+        limits.x = this->pos.x;
+        limits.y = this->pos.y + this->size.h - SSG_GAP;
+        limits.w = this->size.w;
+        limits.h = SSG_GAP;
+        SDL_bool size_h = SDL_PointInRect(&mousePosition, &limits);
+        SDL_RenderDrawRect (this->renderer, &limits);
 
         if (size_w & size_h) {
             SDL_SetCursor(this->nwse_cursor);
-        } else if (!size_w & !size_h) { // (!this->moving & ! this->sizing)
-            SDL_SetCursor(this->def_cursor);
-        } else {
-            if (size_w) {
-                SDL_SetCursor(this->we_cursor);
-            } else {
-//            if (size_h){
-                SDL_SetCursor(this->ns_cursor);
-            }
         }
+        if (!size_w & !size_h) { // (!this->moving & ! this->sizing)
+            SDL_SetCursor(this->def_cursor);
+        }
+        if (size_w) {
+                SDL_SetCursor(this->we_cursor);
+        }
+        if (size_h){
+                SDL_SetCursor(this->ns_cursor);
+        }
+        
     }
 
     if (event->type == SDL_MOUSEBUTTONUP) {
@@ -96,7 +111,6 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
     }
 
     // Limits from this component.
-    SDL_Rect limits;
     limits.x = this->pos.x;
     limits.y = this->pos.y;
     limits.w = this->size.w;

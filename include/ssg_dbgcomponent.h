@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include "ssg_types.h"
 
-#define SSG_GAP 20
+#define SSG_GAP 10
 
 typedef struct ssg_dbgcomponent SSGDbgcomponent;
 
@@ -30,6 +30,9 @@ struct ssg_dbgcomponent
     SDL_Cursor* ns_cursor;
     SDL_Cursor* we_cursor;
     SDL_Cursor* nwse_cursor;
+
+    // DEBUG
+    SDL_Renderer *renderer;
 };
 
 void                init_dbgcomponent   (SSGDbgcomponent* this);
