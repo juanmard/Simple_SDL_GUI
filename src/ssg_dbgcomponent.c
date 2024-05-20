@@ -59,8 +59,40 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
             this->pos.y = eMouse->y - this->offset.y;
         }
         if (this->sizing){
-            this->size.w = eMouse->x - this->offset.x;
+            this->size.w = eMouse->x - this->pos.x;
         }
+
+        // Change cursor.
+        // TODO: A function that get this check position.
+        int posx_check = this->pos.x + this->size.w;
+        int posy_check = this->pos.y + this->size.h;
+        SSG_bool size_w = (eMouse->x > (posx_check - SSG_GAP)) & (eMouse->x < posx_check);
+        SSG_bool size_h = (eMouse->y > (posy_check - SSG_GAP)) & (eMouse->y < posy_check);
+
+        if (size_w & size_h) {
+            SDL_SetCursor(this->nwse_cursor);
+        } else if (!size_w & !size_h) { // (!this->moving & ! this->sizing)
+            SDL_SetCursor(this->def_cursor);
+        } else {
+            if (size_w) {
+                SDL_SetCursor(this->we_cursor);
+            } else {
+//            if (size_h){
+                SDL_SetCursor(this->ns_cursor);
+            }
+        }
+    }
+
+    if (event->type == SDL_MOUSEBUTTONUP) {
+        // Release and drop the this component.
+        this->moving = false;
+        this->sizing = false;
+        this->color.a = 0xFF;
+        SDL_SetCursor(this->def_cursor);
+
+        // Change color.
+        this->color.r = 0x00;
+        this->color.g = 0xFF;
     }
 
     // Limits from this component.
@@ -85,7 +117,7 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 
                 // Check moving and sizing behaviour.
                 if (eMButton->button  == SDL_BUTTON_LEFT) {
-                    if (eMButton->x > (this->pos.x + this->size.w-20)) {
+                    if (eMButton->x > (this->pos.x + this->size.w-SSG_GAP)) {
                         this->sizing = true;
                         this->color.g = 128;
                     } else {
@@ -102,27 +134,10 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
                 break;
             
             case SDL_MOUSEBUTTONUP:
-                // Release and drop the this component.
-                this->moving = false;
-                this->sizing = false;
-                this->color.a = 0xFF;
-                SDL_SetCursor(this->nor_cursor);
-
-                // Change color.
-                this->color.r = 0x00;
-                this->color.g = 0xFF;
                 break;
             
             case SDL_MOUSEMOTION:
-                // Change cursor.
-                SDL_MouseMotionEvent *eMouse = &(event->motion);
-                if ((eMouse->x > (this->pos.x + this->size.w-20)) & \
-                (eMouse->x < (this->pos.x + this->size.w)))  {
-                    SDL_SetCursor(this->siz_cursor);
-                } else {
-                    SDL_SetCursor(this->nor_cursor);
-                }
-                break;
+                 break;
 
             default:
                 break;
@@ -158,9 +173,11 @@ void init_dbgcomponent  (SSGDbgcomponent* this){
     this->offset = (Position) {0,0};
 
     // TODO: Move another global place for all components.
-    this->nor_cursor = SDL_GetCursor();
+    this->def_cursor = SDL_GetCursor();
     this->mov_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
-    this->siz_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
+    this->we_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
+    this->ns_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
+    this->nwse_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
 };
 
 /*

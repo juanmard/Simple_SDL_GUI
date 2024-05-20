@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include "ssg_types.h"
 
+#define SSG_GAP 20
+
 typedef struct ssg_dbgcomponent SSGDbgcomponent;
 
 /*
@@ -23,9 +25,11 @@ struct ssg_dbgcomponent
 
     
     // TODO: Move in another place for ann access from all components.
-    SDL_Cursor* nor_cursor;
+    SDL_Cursor* def_cursor;
     SDL_Cursor* mov_cursor;
-    SDL_Cursor* siz_cursor;
+    SDL_Cursor* ns_cursor;
+    SDL_Cursor* we_cursor;
+    SDL_Cursor* nwse_cursor;
 };
 
 void                init_dbgcomponent   (SSGDbgcomponent* this);
