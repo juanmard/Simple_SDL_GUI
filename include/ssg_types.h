@@ -10,6 +10,7 @@ typedef struct color {unsigned int r, g, b, a;} Color;
 
 typedef enum {
     SSG_COMPONENT = 0,
+    SSG_DBGCOMPONENT,
     SSG_BASIC,
     SSG_SLIDER,
     SSG_LABEL,

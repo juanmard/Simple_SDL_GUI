@@ -1,22 +1,22 @@
 /*
-TODO: 
+  A debug component for testing behavior.
 */
 #include "ssg_dbgcomponent.h"
 
 /*
 TODO: 
 */
-void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* dbgcomponent){
+void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* this){
     SDL_SetRenderDrawColor (renderer,
-                    dbgcomponent->color.r,
-                    dbgcomponent->color.g,
-                    dbgcomponent->color.b,
-                    dbgcomponent->color.a);
+                    this->color.r,
+                    this->color.g,
+                    this->color.b,
+                    this->color.a);
     SDL_Rect bounds;
-    bounds.x = dbgcomponent->pos.x;
-    bounds.y = dbgcomponent->pos.y;
-    bounds.w = dbgcomponent->size.w;
-    bounds.h = dbgcomponent->size.h;
+    bounds.x = this->pos.x;
+    bounds.y = this->pos.y;
+    bounds.w = this->size.w;
+    bounds.h = this->size.h;
 
     SDL_RenderDrawRect (renderer, &bounds);
 };
@@ -25,17 +25,17 @@ void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* dbgcomponent){
 /*
 TODO: 
 */
-void draw_dbgcomponent_test (SDL_Renderer* renderer, SSGDbgcomponent* dbgcomponent){
+void draw_dbgcomponent_test (SDL_Renderer* renderer, SSGDbgcomponent* this){
     SDL_SetRenderDrawColor (renderer,
-                            dbgcomponent->color.r,
-                            dbgcomponent->color.g,
-                            dbgcomponent->color.b,
-                            dbgcomponent->color.a);
+                            this->color.r,
+                            this->color.g,
+                            this->color.b,
+                            this->color.a);
     SDL_Rect bounds;
-    bounds.x = dbgcomponent->pos.x;
-    bounds.y = dbgcomponent->pos.y;
-    bounds.w = dbgcomponent->size.w;
-    bounds.h = dbgcomponent->size.h;
+    bounds.x = this->pos.x;
+    bounds.y = this->pos.y;
+    bounds.w = this->size.w;
+    bounds.h = this->size.h;
     SDL_RenderDrawLine (renderer, bounds.x, bounds.y, bounds.x+bounds.w, bounds.y+bounds.h);
     SDL_RenderDrawLine (renderer, bounds.x+bounds.w, bounds.y, bounds.x, bounds.y+bounds.h);
 };
@@ -43,7 +43,7 @@ void draw_dbgcomponent_test (SDL_Renderer* renderer, SSGDbgcomponent* dbgcompone
 /*
 TODO: 
 */
-void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this){
+void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 
     // Mouse click coords from event handler.
     SDL_Point mousePosition;
@@ -56,6 +56,9 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this){
         if (this->moving) {
             this->pos.x = eMouse->x - this->offset.x;
             this->pos.y = eMouse->y - this->offset.y;
+        }
+        if (this->sizing){
+            this->size.w = eMouse->x - this->offset.x;
         }
     }
 
@@ -79,11 +82,16 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this){
                     }
                 }
 
-                // Check moving behaviour.
+                // Check moving and sizing behaviour.
                 if (eMButton->button  == SDL_BUTTON_LEFT) {
-                    this->moving = true;
+                    if (eMButton->x > (this->pos.x + this->size.w-2)) {
+                        this->sizing = true;
+                        this->color.g = 128;
+                    } else {
+                        this->moving = true;
+                        this->color.r = 128;
+                    }
                     this->offset = (Position){eMButton->x - this->pos.x, eMButton->y - this->pos.y};
-                    this->color.a = 180;
                 }
 
                 // Change the color.
@@ -94,6 +102,7 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this){
             case SDL_MOUSEBUTTONUP:
                 // Release and drop the this component.
                 this->moving = false;
+                this->sizing = false;
                 this->color.a = 0xFF;
 
                 // Change color.
@@ -124,30 +133,31 @@ SSGDbgcomponent* new_dbgcomponent () {
     init_dbgcomponent ()
     For a dbgcomponent initialization test.
 */
-void init_dbgcomponent  (SSGDbgcomponent* dbgcomponent){
-    dbgcomponent->type = SSG_BASIC;
-    // dbgcomponent->dad = ...;
-    // dbgcomponent->son = NULL;
-    dbgcomponent->update = (PTR_UPDATE) &update_dbgcomponent;
-    dbgcomponent->draw = (PTR_DRAW) &draw_dbgcomponent;
+void init_dbgcomponent  (SSGDbgcomponent* this){
+    this->type = SSG_DBGCOMPONENT;
+    // this->dad = ...;
+    // this->son = NULL;
+    this->update = (PTR_UPDATE) &update_dbgcomponent;
+    this->draw = (PTR_DRAW) &draw_dbgcomponent;
 
-    dbgcomponent->pos = (Position) {10,100};
-    dbgcomponent->size = (Size) {200,30};
-    dbgcomponent->color = (Color) {0x00, 0x00, 0xFF, 0xFF};
+    this->pos = (Position) {10,100};
+    this->size = (Size) {200,30};
+    this->color = (Color) {0x00, 0x00, 0xFF, 0xFF};
 
-    dbgcomponent->moving = false;
-    dbgcomponent->offset = (Position) {0,0};
+    this->moving = false;
+    this->sizing = false;
+    this->offset = (Position) {0,0};
 };
 
 /*
 TODO: 
 */
-void free_dbgcomponent (SSGDbgcomponent* dbgcomponent){
-    if (dbgcomponent->son == NULL) {
+void free_dbgcomponent (SSGDbgcomponent* this){
+    if (this->son == NULL) {
         // Break the link with his father and then...
-        dbgcomponent->son = NULL;
+        this->son = NULL;
         // ...be free.
-        free (dbgcomponent);
+        free (this);
     }
     // TODO: ...else {free first his own son}.
 };

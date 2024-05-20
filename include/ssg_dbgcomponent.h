@@ -20,6 +20,7 @@ struct ssg_dbgcomponent
     void* son;
 
     SSG_bool moving;
+    SSG_bool sizing;
     Position offset;
 };
 
