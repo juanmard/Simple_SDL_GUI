@@ -2,6 +2,7 @@
 #define SSG_LABEL_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "ssg_types.h"
 
 typedef struct ssg_label SSGLabel;
@@ -17,16 +18,16 @@ struct ssg_label
     Position   pos;
     Size       size;
     Color      color;
-    void*      dad;
-    void*      son;
 
+    char* text;
+    TTF_Font* font;
 };
 
 SSGLabel*  new_label (void);
-void       init_label (SSGLabel* label);
-void       free_label (SSGLabel* label);
+void       init_label (SSGLabel* this);
+void       free_label (SSGLabel* this);
 
-void       draw_label (SDL_Renderer* renderer, SSGLabel* label);
-void       update_label (SDL_Event* event, SSGLabel* label);
+void       draw_label (SDL_Renderer* renderer, SSGLabel* this);
+void       update_label (SDL_Event* event, SSGLabel* this);
 
 #endif

@@ -2,10 +2,10 @@
 
 CC = gcc
 CPPFLAGS = -Iinclude
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image` -g \
+CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image SDL2_ttf` -g \
 		 -fsanitize=address
 LDFLAGS = -pthread
-LDLIBS = `pkg-config --libs sdl2 SDL2_image` -fsanitize=address
+LDLIBS = `pkg-config --libs sdl2 SDL2_image SDL2_ttf` -fsanitize=address
 
 SRC = main.c \
 	  src/ssg_basic.c \
