@@ -4,9 +4,16 @@
 #include <SDL2/SDL.h>
 #include "ssg_types.h"
 
-#define SSG_GAP 10
+#define SSG_GAP 20
 
 typedef struct ssg_dbgcomponent SSGDbgcomponent;
+
+typedef enum {
+    NOT_SIZING = 0,
+    NWSE_SIZING,
+    NS_SIZING,
+    WE_SIZING
+} SSG_SIZING_STATE;
 
 /*
  */
@@ -30,6 +37,7 @@ struct ssg_dbgcomponent
     SDL_Cursor* ns_cursor;
     SDL_Cursor* we_cursor;
     SDL_Cursor* nwse_cursor;
+    SSG_SIZING_STATE sizing_state;
 
     // DEBUG
     SDL_Renderer *renderer;

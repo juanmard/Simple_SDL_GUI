@@ -2,11 +2,31 @@
   A debug component for testing behavior.
 */
 #include "ssg_dbgcomponent.h"
+#include <stdio.h> // FOR DEBUG.
 
 /*
 TODO: 
 */
 void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* this){
+    // Change cursor.
+    if ( (!this->moving) && (!this->sizing) ) {
+        switch (this->sizing_state) {
+            case NOT_SIZING:
+                SDL_SetCursor(this->def_cursor);
+                break;
+            case NWSE_SIZING:
+                SDL_SetCursor(this->nwse_cursor);
+                break;
+            case WE_SIZING:
+                SDL_SetCursor(this->we_cursor);
+                break;
+            case NS_SIZING:
+                SDL_SetCursor(this->ns_cursor);
+                break;
+        }
+    }   
+    
+    // Draw rect with color.
     SDL_SetRenderDrawColor (renderer,
                     this->color.r,
                     this->color.g,
@@ -63,39 +83,59 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
             this->pos.y = eMouse->y - this->offset.y;
         }
         if (this->sizing){
-            this->size.w = eMouse->x - this->pos.x;
+            switch (this->sizing_state)
+            {
+                case WE_SIZING:
+                    this->size.w = eMouse->x - this->pos.x;
+                    break;
+                case NS_SIZING:
+                    this->size.h = eMouse->y - this->pos.y;
+                    break;
+                case NWSE_SIZING:
+                    this->size.w = eMouse->x - this->pos.x;
+                    this->size.h = eMouse->y - this->pos.y;
+                    break;
+                default:
+                    break;
+            }
         }
 
         // Change cursor.
         // TODO: A function that get this check position.
         mousePosition.x = eMouse->x;
         mousePosition.y = eMouse->y;
-        limits.x = this->pos.x + this->size.w - SSG_GAP;
+        limits.x = this->pos.x + this->size.w;
         limits.y = this->pos.y;
         limits.w = SSG_GAP;
-        limits.h = this->size.h;
+        limits.h = this->size.h + SSG_GAP;
         SDL_bool size_w = SDL_PointInRect(&mousePosition, &limits);
         SDL_RenderDrawRect (this->renderer, &limits);
         limits.x = this->pos.x;
-        limits.y = this->pos.y + this->size.h - SSG_GAP;
-        limits.w = this->size.w;
+        limits.y = this->pos.y + this->size.h;
+        limits.w = this->size.w + SSG_GAP;
         limits.h = SSG_GAP;
         SDL_bool size_h = SDL_PointInRect(&mousePosition, &limits);
         SDL_RenderDrawRect (this->renderer, &limits);
 
-        if (size_w & size_h) {
-            SDL_SetCursor(this->nwse_cursor);
-        }
-        if (!size_w & !size_h) { // (!this->moving & ! this->sizing)
-            SDL_SetCursor(this->def_cursor);
-        }
-        if (size_w) {
-                SDL_SetCursor(this->we_cursor);
-        }
-        if (size_h){
-                SDL_SetCursor(this->ns_cursor);
-        }
-        
+        if ( (!this->moving) && (!this->sizing) ) {
+            if (!size_w && !size_h) {
+//                SDL_SetCursor(this->def_cursor);
+                this->sizing_state = NOT_SIZING;
+                //fprintf(stderr, "Cursor:\tDefault\n");
+            } else if (size_w && size_h) {
+//                SDL_SetCursor(this->nwse_cursor);
+                this->sizing_state = NWSE_SIZING;
+                //fprintf(stderr, "Cursor:\tNWSE\n");
+            } else if (size_w) {
+//                SDL_SetCursor(this->we_cursor);
+                this->sizing_state = WE_SIZING;
+                //fprintf(stderr, "Cursor:\tWE\n");
+            } else if (size_h){
+//                SDL_SetCursor(this->ns_cursor);
+                this->sizing_state = NS_SIZING;
+                //fprintf(stderr, "Cursor:\tNS\n");
+            }
+        }        
     }
 
     if (event->type == SDL_MOUSEBUTTONUP) {
@@ -113,8 +153,8 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
     // Limits from this component.
     limits.x = this->pos.x;
     limits.y = this->pos.y;
-    limits.w = this->size.w;
-    limits.h = this->size.h;
+    limits.w = this->size.w + SSG_GAP;
+    limits.h = this->size.h + SSG_GAP;
     if (SDL_PointInRect(&mousePosition, &limits)) {
         switch(event->type)
         {
@@ -131,13 +171,11 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
 
                 // Check moving and sizing behaviour.
                 if (eMButton->button  == SDL_BUTTON_LEFT) {
-                    if (eMButton->x > (this->pos.x + this->size.w-SSG_GAP)) {
-                        this->sizing = true;
-                        this->color.g = 128;
-                    } else {
+                    if (this->sizing_state == NOT_SIZING) {
                         this->moving = true;
-                        this->color.r = 128;
-                        SDL_SetCursor(this->mov_cursor);
+                        SDL_SetCursor (this->mov_cursor);
+                    } else {
+                        this->sizing = true;
                     }
                     this->offset = (Position){eMButton->x - this->pos.x, eMButton->y - this->pos.y};
                 }
@@ -192,11 +230,17 @@ void init_dbgcomponent  (SSGDbgcomponent* this){
     this->we_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
     this->ns_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
     this->nwse_cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
+    this-> sizing_state = NOT_SIZING;
 };
 
 /*
 TODO: 
 */
 void free_dbgcomponent (SSGDbgcomponent* this) {
+        SDL_FreeCursor(this->def_cursor);
+        SDL_FreeCursor(this->mov_cursor);
+        SDL_FreeCursor(this->we_cursor);
+        SDL_FreeCursor(this->ns_cursor);
+        SDL_FreeCursor(this->nwse_cursor);
         free (this);
 };
