@@ -2,13 +2,12 @@
   A debug component for testing behavior.
 */
 #include "ssg_dbgcomponent.h"
-#include <stdio.h> // FOR DEBUG.
 
 /*
 TODO: 
 */
 void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* this){
-    // Change cursor.
+    // Update cursor.
     if ( (!this->moving) && (!this->sizing) ) {
         switch (this->sizing_state) {
             case NOT_SIZING:
@@ -39,7 +38,6 @@ void draw_dbgcomponent (SDL_Renderer* renderer, SSGDbgcomponent* this){
     bounds.h = this->size.h;
 
     SDL_RenderDrawRect (renderer, &bounds);
-    this->renderer = renderer;
 };
 
 
@@ -109,41 +107,29 @@ void update_dbgcomponent (SDL_Event* event, SSGDbgcomponent* this) {
         limits.w = SSG_GAP;
         limits.h = this->size.h + SSG_GAP;
         SDL_bool size_w = SDL_PointInRect(&mousePosition, &limits);
-        SDL_RenderDrawRect (this->renderer, &limits);
         limits.x = this->pos.x;
         limits.y = this->pos.y + this->size.h;
         limits.w = this->size.w + SSG_GAP;
         limits.h = SSG_GAP;
         SDL_bool size_h = SDL_PointInRect(&mousePosition, &limits);
-        SDL_RenderDrawRect (this->renderer, &limits);
 
         if ( (!this->moving) && (!this->sizing) ) {
             if (!size_w && !size_h) {
-//                SDL_SetCursor(this->def_cursor);
                 this->sizing_state = NOT_SIZING;
-                //fprintf(stderr, "Cursor:\tDefault\n");
             } else if (size_w && size_h) {
-//                SDL_SetCursor(this->nwse_cursor);
                 this->sizing_state = NWSE_SIZING;
-                //fprintf(stderr, "Cursor:\tNWSE\n");
             } else if (size_w) {
-//                SDL_SetCursor(this->we_cursor);
                 this->sizing_state = WE_SIZING;
-                //fprintf(stderr, "Cursor:\tWE\n");
             } else if (size_h){
-//                SDL_SetCursor(this->ns_cursor);
                 this->sizing_state = NS_SIZING;
-                //fprintf(stderr, "Cursor:\tNS\n");
             }
         }        
     }
 
     if (event->type == SDL_MOUSEBUTTONUP) {
-        // Release and drop the this component.
+        // Release and drop this component.
         this->moving = false;
         this->sizing = false;
-        this->color.a = 0xFF;
-        SDL_SetCursor(this->def_cursor);
 
         // Change color.
         this->color.r = 0x00;
@@ -211,8 +197,6 @@ SSGDbgcomponent* new_dbgcomponent () {
 */
 void init_dbgcomponent  (SSGDbgcomponent* this){
     this->type = SSG_DBGCOMPONENT;
-    // this->dad = ...;
-    // this->son = NULL;
     this->update = (PTR_UPDATE) &update_dbgcomponent;
     this->draw = (PTR_DRAW) &draw_dbgcomponent;
 

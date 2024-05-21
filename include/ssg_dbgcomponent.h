@@ -38,9 +38,6 @@ struct ssg_dbgcomponent
     SDL_Cursor* we_cursor;
     SDL_Cursor* nwse_cursor;
     SSG_SIZING_STATE sizing_state;
-
-    // DEBUG
-    SDL_Renderer *renderer;
 };
 
 void                init_dbgcomponent   (SSGDbgcomponent* this);
