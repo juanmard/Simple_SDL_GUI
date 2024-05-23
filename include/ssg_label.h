@@ -21,6 +21,9 @@ struct ssg_label
 
     char* text;
     TTF_Font* font;
+    SDL_Surface* surfaceMessage;
+    SDL_Texture* Message;
+    SDL_Rect* Message_rect;
 };
 
 SSGLabel*  new_label (void);
