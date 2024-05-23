@@ -93,5 +93,17 @@ void draw_label (SDL_Renderer* renderer, SSGLabel* this){
 TODO: Description.
 */
 void update_label (SDL_Event* event, SSGLabel* this){
-    
+    if (event->type == SDL_MOUSEBUTTONDOWN) {
+        if (event->button.button == SDL_BUTTON_LEFT)
+            this->Message_rect->w += 4;
+        if (event->button.button == SDL_BUTTON_RIGHT)
+            this->Message_rect->w -= 4;
+    }
+
+    if (event->type == SDL_MOUSEWHEEL) {
+        if (event->wheel.y > 0)
+            this->Message_rect->h += 4;
+        if (event->wheel.y < 0)
+            this->Message_rect->h -= 4;
+    }
 };
