@@ -106,4 +106,14 @@ void update_label (SDL_Event* event, SSGLabel* this){
         if (event->wheel.y < 0)
             this->Message_rect->h -= 4;
     }
+
+    if (event->type == SDL_KEYDOWN) {
+        //if (event->key.keysym.sym == SDLK_t){
+            free(this->surfaceMessage);
+            
+            this->text = "This is a test.";
+            this->surfaceMessage = TTF_RenderText_Solid (this->font, this->text, (SDL_Color){255, 0, 0, 0xFF});
+            printf ("Change the text\n");
+        //}
+    }
 };
