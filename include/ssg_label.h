@@ -20,6 +20,8 @@ struct ssg_label
     Color      color;
 
     char* text;
+    SSG_bool generate;
+
     TTF_Font* font;
     SDL_Surface* surfaceMessage;
     SDL_Texture* Message;

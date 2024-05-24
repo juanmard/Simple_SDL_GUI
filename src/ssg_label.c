@@ -25,6 +25,7 @@ void init_label (SSGLabel* this){
     // Debug text label.
     this->text = malloc(sizeof(char[250]));
     this->text = "Debug text label";
+    this->generate = false;
 
     //Initialize SDL_ttf
      if ( TTF_Init() == -1 ) {
@@ -32,10 +33,10 @@ void init_label (SSGLabel* this){
     }
     
     // This opens a font style and sets a size
-    this->font = TTF_OpenFont("arial.ttf", 28);
+    this->font = TTF_OpenFont("arial.ttf", 42);
     if (this->font == NULL) {
         printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
-    } else  { fprintf(stderr, "Todo OK\n");}
+    }
 
     // this is the color in rgb format,
     // maxing out all would give you the color white,
@@ -43,7 +44,7 @@ void init_label (SSGLabel* this){
     // SDL_Color White = {128, 128, 128, 0xFF};
 
     // as TTF_RenderText_Solid could only be used on
-    // SDL_Surface then you have to create the surface first
+    // SDL_Surf ace then you have to create the surface first
     this->surfaceMessage = TTF_RenderText_Solid (this->font, this->text, (SDL_Color){255, 255, 255, 0xFF}); 
 
     this->Message_rect = malloc(sizeof(SDL_Rect));
@@ -69,6 +70,12 @@ void free_label (SSGLabel* this){
 TODO: Description.
 */
 void draw_label (SDL_Renderer* renderer, SSGLabel* this){
+    if (this->generate) {
+        free(this->surfaceMessage);
+        this->surfaceMessage = TTF_RenderText_Solid (this->font, this->text, (SDL_Color){255, 0, 0, 0xFF});
+        this->generate = false; 
+    }
+
     // now you can convert it into a texture
     this->Message = SDL_CreateTextureFromSurface (renderer, this->surfaceMessage);
 
@@ -102,18 +109,33 @@ void update_label (SDL_Event* event, SSGLabel* this){
 
     if (event->type == SDL_MOUSEWHEEL) {
         if (event->wheel.y > 0)
-            this->Message_rect->h += 4;
+            this->Message_rect->h += 10;
         if (event->wheel.y < 0)
-            this->Message_rect->h -= 4;
+            this->Message_rect->h -= 10;
     }
 
     if (event->type == SDL_KEYDOWN) {
-        //if (event->key.keysym.sym == SDLK_t){
-            free(this->surfaceMessage);
-            
-            this->text = "This is a test.";
-            this->surfaceMessage = TTF_RenderText_Solid (this->font, this->text, (SDL_Color){255, 0, 0, 0xFF});
-            printf ("Change the text\n");
-        //}
+        switch (event->key.keysym.sym)
+        {
+        case SDLK_LEFT:            
+            this->text = "Key: SDLK_LEFT";
+            break;
+
+        case SDLK_RIGHT:
+            this->text = "Key: SDLK_RIGHT";
+            break;
+
+        case SDLK_UP:
+            this->text = "Key: SDLK_UP";
+            break;
+
+        case SDLK_DOWN:
+            this->text = "Key: SDLK_DOWN";
+            break;
+
+        default:
+            break;
+        }
+        this->generate = true;
     }
-};
+}
